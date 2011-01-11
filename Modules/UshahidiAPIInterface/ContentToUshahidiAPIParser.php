@@ -26,42 +26,17 @@ class ContentToUshahidiAPIParser {
 
         //Use the data above and others to build the parameters array
         $parameters = array(
-            "task" => "swiftriver",
+            "task" => "report",
             "incident_title" => $content->text[0]->title,
             "incident_description" => $description,
-            "incident_date" => date("m/d/Y", $date),
+            "incident_date" => date("m/d/y", $date),
             "incident_hour" => date("h", $date),
             "incident_minute" => date("i", $date),
             "incident_ampm" => (date("H", $date) <= 12) ? "am" : "pm",
             "incident_category" => $categories,
         );
 
-        if(isset($content->gisData->longitude)) {
-            $parameters["longitude"] = $content->gisData->longitude;
-        }
-        else {
-            $parameters["longitude"] = "0";
-        }
-
-        if(isset($content->gisData->latitude)) {
-            $parameters["latitude"] = $content->gisData->latitude;
-        }
-        else {
-            $parameters["latitude"] = "0";
-        }
-
-        if(isset($content->gisData->name)) {
-            $parameters["location_name"] = $content->gisData->name; 
-        }
-        else {
-            $parameters["location_name"] = "None";
-        }
-
-        //TODO: We have to find a way to get categories from sweeper and into Ushahidi
-
-        $parameters["incident_category"] = "Trusted Reports";
-
-        //TODO: Until riverId is online and the data schema has been decided, user name and address are not implemnted.
+        //TODO: Untill riverId is online and the data schema has been decided, user name and address are not implemnted.
 
         //return the encoded query
         return $parameters;

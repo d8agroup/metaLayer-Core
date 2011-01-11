@@ -27,8 +27,8 @@ class ServiceWrapper {
             array(
                 'http' => array(
                     'method' => 'POST',
-                    'header' => 'Content-type: application/x-www-form-urlencoded',
-                    'content' => http_build_query($postData),
+                    'header' => 'Content-type: application/x-www-form-urlencoded\r\n',
+                    'content' => http_build_query($postData, '', '&'),
                     'timeout' => $timeout,
                 ),
             ));
