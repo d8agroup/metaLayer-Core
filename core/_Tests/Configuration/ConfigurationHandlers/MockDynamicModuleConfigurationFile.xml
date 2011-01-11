@@ -1,2 +1,0 @@
-<?xml version="1.0"?>
-<configuration><modules><module name="test"><properties><property name="testprop" type="string" description="just a test this is!" value="testvalue"/></properties></module></modules></configuration>

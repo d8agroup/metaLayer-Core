@@ -1,2 +1,0 @@
-<?xml version="1.0"?>
-<configuration><eventHandlers><handler name="test" className="testclass" filePath="testpath"/></eventHandlers></configuration>
