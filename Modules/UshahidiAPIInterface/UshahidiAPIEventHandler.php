@@ -97,6 +97,7 @@ class UshahidiAPIEventHandler implements \Swiftriver\Core\EventDistribution\IEve
 
         //extract the Url for Ushahidi
         $uri = (string) $config["Ushahidi Url"]->value;
+        $uri = rtrim($uri, "/")."/api";
 
         //null check the uri
         if($uri == null || $uri == "") {
@@ -114,6 +115,8 @@ class UshahidiAPIEventHandler implements \Swiftriver\Core\EventDistribution\IEve
         //include the service wrapper
         $service = new \Swiftriver\UshahidiAPIInterface\ServiceInterface();
 
+        $json_returned = "";
+
         try {
             //Call the service and get the return
             $serviceReturn = $service->InterafceWithService($uri, $parameters, $configuration);
@@ -123,22 +126,29 @@ class UshahidiAPIEventHandler implements \Swiftriver\Core\EventDistribution\IEve
                 throw new \Exception("The service returned null or a none string");
 
             //try to decode the json from the service
+            $json_returned = $serviceReturn;
             $json = json_decode($serviceReturn);
 
             //Check that there is valid JSON
-            if(!$json)
+            if(!$json) {
                 throw new \Exception("The service returned a none json string");
+            }
 
-            if(!property_exists($json, "success"))
-                throw new \Exception("The service returned JSON but it did not contain the property 'sucess'");
-
-            if($json->success === false)
+            if(!property_exists($json, "success")) {
+                throw new \Exception("The service returned JSON but it did not contain the property 'success'");
+            }
+            
+            if($json->success === false) {
                 throw new \Exception("The service returned a false in the success flag");
-
+            }
         }
         catch (\Exception $e) {
             $logger->log("Swiftriver::EventHandlers::UshahidiAPIEventHandler::HandleEvent [An exception was thrown]", \PEAR_LOG_ERR);
             $logger->log("Swiftriver::EventHandlers::UshahidiAPIEventHandler::HandleEvent [$e]", \PEAR_LOG_ERR);
+
+            //Output the Returned value
+            $logger->log("Value returned from service call:".$json_returned, \PEAR_LOG_ERR);
+            
             $logger->log("Swiftriver::EventHandlers::UshahidiAPIEventHandler::HandleEvent [Method finished]", \PEAR_LOG_DEBUG);
         }
 
