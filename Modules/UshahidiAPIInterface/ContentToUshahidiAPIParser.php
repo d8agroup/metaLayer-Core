@@ -2,8 +2,8 @@
 namespace Swiftriver\UshahidiAPIInterface;
 class ContentToUshahidiAPIParser {
     /**
-     * Given a Content items, this function parses the properties of the
-     * content item into the format required by the Ushahidi API.
+     * Given content items, this function parses the properties of the
+     * content into the format required by the Ushahidi API.
      *
      * @param \Swiftriver\Core\ObjectModel\Content $content
      * @return string[] parameters
@@ -67,14 +67,14 @@ class ContentToUshahidiAPIParser {
 
         $parameters["incident_category"] = "Trusted Reports";
 
-        //TODO: Until riverId is online and the data schema has been decided, user name and address are not implemnted.
+        //TODO: Until RiverID is online and the data schema has been decided, user name and address are not implemnted.
 
         //return the encoded query
         return $parameters;
     }
 
     /**
-     * Returns the comma seporated list of Ushahidi categories
+     * Returns the comma separated list of Ushahidi categories
      *
      * @param \Swiftriver\Core\ObjectModel\Content $content
      * @return string

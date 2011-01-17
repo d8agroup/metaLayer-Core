@@ -10,7 +10,7 @@ class SiCDSPreProcessingStep implements \Swiftriver\Core\PreProcessing\IPreProce
      * @return string
      */
     public function Name() {
-        return "SiCDS";
+        return "SwiftDuplicationFilter";
     }
 
     /**

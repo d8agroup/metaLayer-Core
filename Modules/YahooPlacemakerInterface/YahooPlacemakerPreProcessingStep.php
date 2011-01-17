@@ -104,13 +104,13 @@ class YahooPlacemakerPreProcessingStep implements \Swiftriver\Core\PreProcessing
     }
 
     public function Description() {
-        return "If you activate this turbine, it will call the Yahoo Placemaker " .
-               "service for every piece of content where it, and its source do not " .
-               "have any geo data.";
+        return "Activating this turbine will invoke the Yahoo Placemaker " .
+               "service for every piece of content where it, and it's source do not " .
+               "carry any geo data. <a href='http://developer.yahoo.com/geo/placemaker/#how' target='_blank' >Click to get your App ID</a>";
     }
 
     public function Name() {
-        return "Yahoo Placemaker Service";
+        return "Geo Location (Yahoo)";
     }
 
     public function ReturnRequiredParameters() {
@@ -119,7 +119,7 @@ class YahooPlacemakerPreProcessingStep implements \Swiftriver\Core\PreProcessing
                     "Yahoo Placemaker App Id",
                     "string",
                     "The app id you are given when you register a new application ".
-                    "with the Yahoo Placemaker service"),
+                    "with the Yahoo Placemaker service. <a href='http://developer.yahoo.com/geo/placemaker/#how' target='_blank' >Click to get your App ID</a>"),
         );
     }
 }

@@ -21,9 +21,9 @@ class UshahidiAPIEventHandler implements \Swiftriver\Core\EventDistribution\IEve
      * @return string
      */
     public function Description() {
-        return "Activating this Reactor Turbine will cause all content that you " .
-               "mark as accurate to be sent to the associated Ushahidi instance " .
-               "as a new report.";
+        return "Activating this plugin will cause all content marked " .
+               "accurate to be sent to the associated Ushahidi instance " .
+               "as a new report. Works best with Geo Location activated.";
     }
 
     /**
@@ -37,8 +37,8 @@ class UshahidiAPIEventHandler implements \Swiftriver\Core\EventDistribution\IEve
             new \Swiftriver\Core\ObjectModel\ConfigurationElement(
                     "Ushahidi Url",
                     "string",
-                    "The fully qualified url to the Ushahidi instance you want to " .
-                    "communicate with (please dont include the API path, just the root)"),
+                    "The url to the Ushahidi instance you want to push reports to." .
+                    "Please don't include the API path, just the root (ex. http://ushahidi.com/)."),
         );
     }
 
