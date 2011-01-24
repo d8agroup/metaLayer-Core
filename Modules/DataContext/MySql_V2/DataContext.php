@@ -842,9 +842,10 @@ class DataContext implements
         if($source != null)
             $filters[] = "source.id = '$source'";
 
-        $tag = (\key_exists("tag", $parameters)) ? $parameters["tag"] : null;
-        if($tag != null)
-            $filters[] = "content.id in (select ct.contentId from SC_Content_Tags ct join SC_Tags t on ct.tagId = t.id where t.text = '$tag')";
+        $tags = (\key_exists("tags", $parameters)) ? $parameters["tags"] : null;
+        if($tags != null && \is_array($tags))
+            foreach($tags as $tag)
+                $filters[] = "content.id in (select ct.contentId from SC_Content_Tags ct join SC_Tags t on ct.tagId = t.id where t.text = '$tag')";
 
         $pageSize = (key_exists("pageSize", $parameters)) ? $parameters["pageSize"] : null;
 
@@ -890,19 +891,18 @@ class DataContext implements
 
             $navigation = array();
 
-            if($tag == null)
-            {
-                $tagsSql = "SELECT t.text as name, t.text as id, count(t.text) as count FROM SC_Tags t join SC_Content_Tags ct ON t.id = ct.tagId WHERE ct.contentId in (SELECT content.id " . $sql . ") GROUP BY t.text ORDER BY count DESC";
-                $tagsStatement = $db->prepare($tagsSql);
-                $tagsStatement->execute();
-                $results = $tagsStatement->fetchAll(\PDO::FETCH_ASSOC);
-                $types = array(
-                    "type" => "list",
-                    "key" => "tags",
-                    "selected" => $type != null,
-                    "facets" => $results);
-                $navigation["Tags"] = $types;
-            }
+
+
+            $tagsSql = "SELECT t.text as name, t.text as id, count(t.text) as count FROM SC_Tags t join SC_Content_Tags ct ON t.id = ct.tagId WHERE ct.contentId in (SELECT content.id " . $sql . ") GROUP BY t.text ORDER BY count DESC";
+            $tagsStatement = $db->prepare($tagsSql);
+            $tagsStatement->execute();
+            $results = $tagsStatement->fetchAll(\PDO::FETCH_ASSOC);
+            $types = array(
+                "type" => "list",
+                "key" => "tags",
+                "selected" => $type != null,
+                "facets" => $results);
+            $navigation["Tags"] = $types;
 
 
             if($subType == null)
