@@ -60,7 +60,8 @@ class SourcesByChannelOverTimeAnalyticsProvider
                 DAYOFYEAR(FROM_UNIXTIME(s.date)) as dayoftheyear,
                 count(s.id) as numberofsources,
                 ch.id as channelId,
-                ch.json as channelJson
+                ch.json as channelJson,
+                s.json as sourceJson
             FROM 
                 SC_Sources s JOIN SC_Channels ch ON s.channelId = ch.id
             WHERE
@@ -94,10 +95,25 @@ class SourcesByChannelOverTimeAnalyticsProvider
             
             foreach($statement->fetchAll() as $row)
             {
+                $channel_name = "";
+                $source_name = "";
+                $entry_channel_json_decoded = json_decode($row["channelJson"]);
+                $entry_source_json_decoded = json_decode($row["sourceJson"]);
+
+                if(isset($entry_channel_json_decoded->name)) {
+                    $channel_name = $entry_channel_json_decoded->name;
+                }
+
+                if(isset($entry_source_json_decoded->name)) {
+                    $source_name = $entry_channel_json_decoded->name;
+                }
+                
                 $entry = array(
                     "dayOfTheYear" => $this->DayOfYear2Date($row["dayoftheyear"]),
                     "numberOfSources" => $row["numberofsources"],
-                    "channelId" => $row["channelId"]);
+                    "channelId" => $row["channelId"],
+                    "channelName" => $channel_name,
+                    "sourceName" => $source_name);
 
                 $request->Result[] = $entry;
             }
@@ -124,7 +140,7 @@ class SourcesByChannelOverTimeAnalyticsProvider
      */
     public function DataContentSet()
     {
-        return array("\Swiftriver\Core\Modules\DataContext\MySql_V2\DataContext");
+        return array("\\Swiftriver\\Core\\Modules\\DataContext\\MySql_V2\\DataContext");
     }
 
     private  function DayOfYear2Date( $dayofyear, $format = 'd-m-Y' )

@@ -1,4 +1,4 @@
-\<?php
+<?php
 namespace Swiftriver\AnalyticsProviders;
 include_once(\dirname(__FILE__)."/BaseAnalyticsClass.php");
 class TotalContentByChannelAnalyticsProvider

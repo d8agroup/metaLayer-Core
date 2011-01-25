@@ -95,10 +95,18 @@ class ContentByChannelOverTimeAnalyticsProvider
             
             foreach($statement->fetchAll() as $row)
             {
+                $channel_name = "";
+                $entry_json_decoded = json_decode($row["channelJson"]);
+
+                if(isset($entry_json_decoded->name)) {
+                    $channel_name = $entry_json_decoded->name; 
+                }
+
                 $entry = array(
                     "dayOfTheYear" => $this->DayOfYear2Date($row["dayoftheyear"]),
                     "numberOfContentItems" => $row["numberofcontentitems"],
-                    "channelId" => $row["channelId"]);
+                    "channelId" => $row["channelId"],
+                    "channelName" => $channel_name);
 
                 $request->Result[] = $entry;
             }
@@ -125,7 +133,7 @@ class ContentByChannelOverTimeAnalyticsProvider
      */
     public function DataContentSet()
     {
-        return array("\Swiftriver\Core\Modules\DataContext\MySql_V2\DataContext");
+        return array("\\Swiftriver\\Core\\Modules\\DataContext\\MySql_V2\\DataContext");
     }
 
     private  function DayOfYear2Date( $dayofyear, $format = 'd-m-Y' )
