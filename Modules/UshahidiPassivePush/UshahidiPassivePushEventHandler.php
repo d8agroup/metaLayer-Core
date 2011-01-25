@@ -106,13 +106,13 @@ class UshahidiPassivePushEventHandler implements \Swiftriver\Core\EventDistribut
             if($item->source->score > 90) {
                 // Trusted content
                 //Instanciate the parser that will be used to parse the content item into Ushahidi format
-                $toUshahidiParser = new \Swiftriver\UshahidiPostProcessAPIInterface\ContentToUshahidiAPIParser();
+                $toUshahidiParser = new \Swiftriver\UshahidiPassivePush\ContentToUshahidiAPIParser();
 
                 //Get the ushahidi formatted params from the parser
                 $parameters = $toUshahidiParser->ParseContentItemToUshahidiAPIFormat($item);
 
                 //include the service wrapper
-                $service = new \Swiftriver\UshahidiPostProcessAPIInterface\ServiceInterface();
+                $service = new \Swiftriver\UshahidiPassivePush\ServiceInterface();
 
                 $json_returned = "";
 

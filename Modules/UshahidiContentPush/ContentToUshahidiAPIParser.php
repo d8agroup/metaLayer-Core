@@ -1,5 +1,5 @@
 <?php
-namespace Swiftriver\UshahidiPassivePush;
+namespace Swiftriver\UshahidiContentPush;
 class ContentToUshahidiAPIParser {
     /**
      * Given a Content items, this function parses the properties of the

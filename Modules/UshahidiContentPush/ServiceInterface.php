@@ -1,5 +1,5 @@
 <?php
-namespace Swiftriver\UshahidiPassivePush;
+namespace Swiftriver\UshahidiContentPush;
 class ServiceInterface {
     /**
      * Given a valid servive URI and a valid string of JSON
