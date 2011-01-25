@@ -43,14 +43,14 @@ class TwitterParser implements IParser {
                         "string",
                         "The keyword(s) to search for"
                 )
-            ),/*
+            ),
             "Follow User" => array(
                 new \Swiftriver\Core\ObjectModel\ConfigurationElement(
                         "TwitterAccount",
                         "string",
                         "The account name of the Twitter user"
                 )
-            )*/
+            )
         );
     }
 
