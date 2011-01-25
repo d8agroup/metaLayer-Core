@@ -2,7 +2,7 @@
 namespace Swiftriver\EventHandlers;
 include_once(dirname(__FILE__)."/ContentToUshahidiAPIParser.php");
 include_once(dirname(__FILE__)."/ServiceInterface.php");
-class UshahidiPostProcessAPIEventHandler implements \Swiftriver\Core\EventDistribution\IEventHandler {
+class UshahidiPassivePushEventHandler implements \Swiftriver\Core\EventDistribution\IEventHandler {
     /**
      * This method should return the name of the event handler
      * that you implement. This name should be unique across all
@@ -11,7 +11,7 @@ class UshahidiPostProcessAPIEventHandler implements \Swiftriver\Core\EventDistri
      * @return string
      */
     public function Name() {
-        return "Ushahidi Content Post Processor Report Push";
+        return "Ushahidi Passive Push";
     }
 
     /**
@@ -64,27 +64,17 @@ class UshahidiPostProcessAPIEventHandler implements \Swiftriver\Core\EventDistri
      * @param \Log $logger
      */
     public function HandleEvent($event, $configuration, $logger) {
-        $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [Method invoked]", \PEAR_LOG_DEBUG);
+        $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [Method invoked]", \PEAR_LOG_DEBUG);
 
         //Get the $event->arguments as a content item
         $content = $event->arguments;
-
-        //check that arguments property of the $event passed in is a content item
-        /*
-        if($content == null || !\Swiftriver\Core\ObjectModel\TypeComparisons\IsContent::CheckType($content)) {
-            $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [The obejct passed in the GenericEvent->arguments property was not of type Content.]", \PEAR_LOG_DEBUG);
-            $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [Method finished]", \PEAR_LOG_DEBUG);
-            return;
-        }
-         * 
-         */
 
         //get the module configuraiton
         $config = \Swiftriver\Core\Setup::DynamicModuleConfiguration()->Configuration;
 
         if(!key_exists($this->Name(), $config)) {
-            $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [The Ushahidi Event Handler was called but no configuration exists for this module]", \PEAR_LOG_ERR);
-            $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [Method finished]", \PEAR_LOG_DEBUG);
+            $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [The Ushahidi Event Handler was called but no configuration exists for this module]", \PEAR_LOG_ERR);
+            $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [Method finished]", \PEAR_LOG_DEBUG);
             return;
         }
 
@@ -92,8 +82,8 @@ class UshahidiPostProcessAPIEventHandler implements \Swiftriver\Core\EventDistri
 
         foreach($this->ReturnRequiredParameters() as $requiredParam) {
             if(!key_exists($requiredParam->name, $config)) {
-                $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [The Ushahidi Event Handler was called but all the required configuration properties could not be loaded]", \PEAR_LOG_ERR);
-                $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [Method finished]", \PEAR_LOG_DEBUG);
+                $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [The Ushahidi Event Handler was called but all the required configuration properties could not be loaded]", \PEAR_LOG_ERR);
+                $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [Method finished]", \PEAR_LOG_DEBUG);
                 return;
             }
         }
@@ -104,12 +94,12 @@ class UshahidiPostProcessAPIEventHandler implements \Swiftriver\Core\EventDistri
 
         //null check the uri
         if($uri == null || $uri == "") {
-            $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [The Ushahidi Event Handler was called but all the required configuration properties could not be loaded]", \PEAR_LOG_ERR);
-            $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [Method finished]", \PEAR_LOG_DEBUG);
+            $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [The Ushahidi Event Handler was called but all the required configuration properties could not be loaded]", \PEAR_LOG_ERR);
+            $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [Method finished]", \PEAR_LOG_DEBUG);
             return;
         }
 
-        $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [Pushing trusted content item to Ushahidi]", \PEAR_LOG_DEBUG);
+        $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [Pushing trusted content item to Ushahidi]", \PEAR_LOG_DEBUG);
 
         foreach($content as $item) {
 
@@ -152,22 +142,22 @@ class UshahidiPostProcessAPIEventHandler implements \Swiftriver\Core\EventDistri
                     }
                 }
                 catch (\Exception $e) {
-                    $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [An exception was thrown]", \PEAR_LOG_ERR);
-                    $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [$e]", \PEAR_LOG_ERR);
+                    $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [An exception was thrown]", \PEAR_LOG_ERR);
+                    $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [$e]", \PEAR_LOG_ERR);
 
                     //Output the Returned value
                     $logger->log("Value returned from service call:".$json_returned, \PEAR_LOG_ERR);
 
-                    $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [Method finished]", \PEAR_LOG_DEBUG);
+                    $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [Method finished]", \PEAR_LOG_DEBUG);
                 }
             }
             else {
                 // Not a trusted content item
-                $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [Content item not pushed, score < 9, score is:".$item->source->score."]", \PEAR_LOG_DEBUG);
+                $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [Content item not pushed, score < 9, score is:".$item->source->score."]", \PEAR_LOG_DEBUG);
             }
         }
 
-        $logger->log("Swiftriver::EventHandlers::UshahidiPostProcessAPIEventHandler::HandleEvent [Method finished]", \PEAR_LOG_DEBUG);
+        $logger->log("Swiftriver::EventHandlers::UshahidiPassivePushEventHandler::HandleEvent [Method finished]", \PEAR_LOG_DEBUG);
     }
 }
 ?>
