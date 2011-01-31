@@ -91,7 +91,7 @@ class EventDistributor
                     {
                         //If we have a match run the handle event method
                         if($eventName == $event->name) 
-                            $handler->HandleEvent($event, $configuration, $logger);
+                            $event = $handler->HandleEvent($event, $configuration, $logger);
                     }
                 }
                 catch (\Exception $e)
@@ -109,6 +109,8 @@ class EventDistributor
         }
 
         $logger->log("Core::EventDistribution::EventDistributor::RaiseAndDistributeEvent [Method finished]", \PEAR_LOG_DEBUG);
+
+        return $event;
     }
 
     /**

@@ -50,6 +50,7 @@ interface IEventHandler
      * @param GenericEvent $event
      * @param \Swiftriver\Core\Configuration\ConfigurationHandlers\CoreConfigurationHandler $configuration
      * @param \Log $logger
+     * @return GenericEvent $event
      */
     public function HandleEvent($event, $configuration, $logger);
 }

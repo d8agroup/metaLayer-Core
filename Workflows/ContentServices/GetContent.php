@@ -51,9 +51,23 @@ class GetContent extends ContentServicesBase
 
         $logger->log("Core::ServiceAPI::ContentServices::GetContent::RunWorkflow [END: Querying repository]", \PEAR_LOG_DEBUG);
 
+        $logger->log("Core::ServiceAPI::ContentServices::GetContent::RunWorkflow [START: Raising the 'Before Content Sent to Client' event]", \PEAR_LOG_DEBUG);
+
+        $event = new \Swiftriver\Core\EventDistribution\GenericEvent(
+            \Swiftriver\Core\EventDistribution\EventEnumeration::$BeforeContentSentToClient,
+            $results["contentItems"]);
+
+        $eventDistributor = new \Swiftriver\Core\EventDistribution\EventDistributor();
+
+        $returnEvent = $eventDistributor->RaiseAndDistributeEvent($event);
+
+        $contentitems = $returnEvent->arguments;
+
+        $logger->log("Core::ServiceAPI::ContentServices::GetContent::RunWorkflow [END: Raising the 'Before Content Sent to Client' event]", \PEAR_LOG_DEBUG);
+
         $logger->log("Core::ServiceAPI::ContentServices::GetContent::RunWorkflow [START: Parsing content to JSON]", \PEAR_LOG_DEBUG);
 
-        $contentJson = parent::ParseContentToJSON($results["contentItems"]);
+        $contentJson = parent::ParseContentToJSON($contentitems);
 
         $logger->log("Core::ServiceAPI::ContentServices::GetContent::RunWorkflow [END: Parsing content to JSON]", \PEAR_LOG_DEBUG);
 
