@@ -10,5 +10,6 @@ class EventEnumeration
     public static $MarkContentAsAccurate = "MarkContentAsAccurate";
     public static $UpdateContentTagging = "UpdateContentTagging";
     public static $BeforeContentSentToClient = "BeforeContentSentToClient";
+    public static $ContentPostProcessing = "ContentPostProcessing";
 }
 ?>
