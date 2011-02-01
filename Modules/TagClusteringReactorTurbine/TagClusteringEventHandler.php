@@ -64,7 +64,7 @@ class TagClusteringEventHandler implements \Swiftriver\Core\EventDistribution\IE
         foreach($contentItems as $item)
             $contentIds[] = $item->id;
 
-        $getSourceNamesSql = "select distinct type from sc_sources";
+        $getSourceNamesSql = "select distinct type from SC_Sources";
 
         $repository = new \Swiftriver\Core\DAL\Repositories\GenericQueryRepository();
 
@@ -127,8 +127,8 @@ class TagClusteringEventHandler implements \Swiftriver\Core\EventDistribution\IE
                         select
                             count(*)
                         from
-                            sc_content_tags ct join sc_content c on ct.contentId = c.id
-                                    join sc_sources s on c.sourceId = s.id
+                            SC_Content_Tags ct join SC_Content c on ct.contentId = c.id
+                                    join SC_Sources s on c.sourceId = s.id
                         where
                             s.type = '$sourceType'
                     ) as 'score'
@@ -140,18 +140,18 @@ class TagClusteringEventHandler implements \Swiftriver\Core\EventDistribution\IE
                         t.text as 'tagText',
                         count(t.id) as 'tagCount'
                     from
-                        sc_tags t
-                            join sc_content_tags ct on t.id = ct.tagId
-                                join sc_content c on c.id = ct.contentId
-                                    join sc_sources s on s.id = c.sourceId
+                        SC_Tags t
+                            join SC_Content_Tags ct on t.id = ct.tagId
+                                join SC_Content c on c.id = ct.contentId
+                                    join SC_Sources s on s.id = c.sourceId
                     where
                         s.type = '$sourceType'
                     group by
                         s.type,
                         t.id
                 ) a
-                join sc_content_tags ct on a.tagId = ct.tagId
-                    join sc_content c on ct.contentId = c.id
+                join SC_Content_Tags ct on a.tagId = ct.tagId
+                    join SC_Content c on ct.contentId = c.id
             where
                 a.tagCount > 1
                 and
