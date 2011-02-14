@@ -11,7 +11,7 @@ class ContentServicesBase extends \Swiftriver\Core\Workflows\WorkflowBase
 
         $properties = array (
             "state", "minVeracity", "maxVeracity", "type", "subType",
-            "source", "pageSize", "pageStart", "orderBy", "tags",
+            "source", "pageSize", "pageStart", "orderBy", "tags", "time",
         );
 
         $params = array();
