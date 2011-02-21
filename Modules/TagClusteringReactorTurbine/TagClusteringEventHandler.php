@@ -75,7 +75,7 @@ class TagClusteringEventHandler implements \Swiftriver\Core\EventDistribution\IE
             //TODO: do something here
         }
 
-        $results = array();
+        $results = array("AccurateContent" => array(), "AllContent" => array());
 
         $scoreSql = $this->ScoreSql($contentIds);
 
@@ -86,7 +86,18 @@ class TagClusteringEventHandler implements \Swiftriver\Core\EventDistribution\IE
             //TODO: do something here
         }
 
-        $results["All Sources"] = $scoreResults["results"];
+        $results["AllContent"]["All Sources"] = $scoreResults["results"];
+
+        $scoreForAccurateContentSql = $this->ScoreForAccurateContentSql($contentIds);
+
+        $scoreForAccurateContentResults = $repository->RunGenericQuery($scoreForAccurateContentSql);
+
+        if($scoreForAccurateContentResults["errors"] != null)
+        {
+            //TODO: do something here
+        }
+
+        $results["AccurateContent"]["All Sources"] = $scoreForAccurateContentResults["results"];
 
         foreach($getSourceNamesResults["results"] as $row)
         {
@@ -99,21 +110,43 @@ class TagClusteringEventHandler implements \Swiftriver\Core\EventDistribution\IE
                 //TODO: do something here
             }
 
-            $results[$row["type"]] = $sourceSpecificResults["results"];
+            $results["AllContent"][$row["type"]] = $sourceSpecificResults["results"];
+
+            $sourceSpecificForAccurateContentSql = $this->ScoreBySourceTypeForAccurateContentSql($row["type"], $contentIds);
+
+            $sourceSpecificForAccurateContentResults = $repository->RunGenericQuery($sourceSpecificForAccurateContentSql);
+
+            if($sourceSpecificForAccurateContentResults["errors"] != null)
+            {
+                //TODO: do something here
+            }
+
+            $results["AccurateContent"][$row["type"]] = $sourceSpecificForAccurateContentResults["results"];
         }
 
         for($i = 0; $i < \count($contentItems); $i++)
         {
-            $tagClusteringInfo = array();
+            $tagClusteringInfo = array("AccurateContent" => array(), "AllContent" => array());
 
-            foreach($results as $type => $dbresults)
+            foreach($results["AccurateContent"] as $type => $dbresults)
             {
                 foreach($dbresults as $row)
                 {
                     if($row["contentId"] != $contentItems[$i]->id)
                         continue;
 
-                    $tagClusteringInfo[$type] = $row["score"];
+                    $tagClusteringInfo["AccurateContent"][$type] = $row["score"];
+                }
+            }
+
+            foreach($results["AllContent"] as $type => $dbresults)
+            {
+                foreach($dbresults as $row)
+                {
+                    if($row["contentId"] != $contentItems[$i]->id)
+                        continue;
+
+                    $tagClusteringInfo["AllContent"][$type] = $row["score"];
                 }
             }
 
@@ -162,6 +195,48 @@ class TagClusteringEventHandler implements \Swiftriver\Core\EventDistribution\IE
                 c.id";
     }
 
+    private function ScoreForAccurateContentSql($contentIds)
+    {
+        $idString = $this->IdsToString($contentIds);
+
+        return
+            "select
+                c.id as 'contentId',
+                SUM(a.tagCount) /
+                    (
+                        select
+                            count(*)
+                        from
+                            SC_Content_Tags ct join SC_Content c
+                                on ct.contentId = c.id
+                        where
+                            c.state = 'accurate'
+                    ) as 'score'
+            from
+                (
+                    select
+                        t.id as 'tagId',
+                        t.text as 'tagText',
+                        count(t.id) as 'tagCount'
+                    from
+                        SC_Tags t
+                            join SC_Content_Tags ct on t.id = ct.tagId
+                                join SC_Content c on c.id = ct.contentId
+                    where
+                        c.state = 'accurate'
+                    group by
+                        t.id
+                ) a
+                join SC_Content_Tags ct on a.tagId = ct.tagId
+                    join SC_Content c on ct.contentId = c.id
+            where
+                a.tagCount > 1
+                and
+                c.id in $idString
+            group by
+                c.id";
+    }
+
     private function ScoreBySourceTypeSql($sourceType, $contentIds)
     {
         $idString = $this->IdsToString($contentIds);
@@ -194,6 +269,54 @@ class TagClusteringEventHandler implements \Swiftriver\Core\EventDistribution\IE
                                     join SC_Sources s on s.id = c.sourceId
                     where
                         s.type = '$sourceType'
+                    group by
+                        s.type,
+                        t.id
+                ) a
+                join SC_Content_Tags ct on a.tagId = ct.tagId
+                    join SC_Content c on ct.contentId = c.id
+            where
+                a.tagCount > 1
+                and
+                c.id in $idString
+            group by
+                c.id, a.sourceType";
+    }
+
+    private function ScoreBySourceTypeForAccurateContentSql($sourceType, $contentIds)
+    {
+        $idString = $this->IdsToString($contentIds);
+
+        return
+            "select
+                c.id as 'contentId',
+                a.sourceType,
+                SUM(a.tagCount) /
+                    (
+                        select
+                            count(*)
+                        from
+                            SC_Content_Tags ct join SC_Content c on ct.contentId = c.id
+                                    join SC_Sources s on c.sourceId = s.id
+                        where
+                            s.type = '$sourceType'
+                            and c.state = 'accurate'
+                    ) as 'score'
+            from
+                (
+                    select
+                        s.type 'sourceType',
+                        t.id as 'tagId',
+                        t.text as 'tagText',
+                        count(t.id) as 'tagCount'
+                    from
+                        SC_Tags t
+                            join SC_Content_Tags ct on t.id = ct.tagId
+                                join SC_Content c on c.id = ct.contentId
+                                    join SC_Sources s on s.id = c.sourceId
+                    where
+                        s.type = '$sourceType'
+                        and c.state = 'accurate'
                     group by
                         s.type,
                         t.id
