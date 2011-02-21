@@ -77,6 +77,17 @@ class TagClusteringEventHandler implements \Swiftriver\Core\EventDistribution\IE
 
         $results = array();
 
+        $scoreSql = $this->ScoreSql($contentIds);
+
+        $scoreResults = $repository->RunGenericQuery($scoreSql);
+
+        if($scoreResults["errors"] != null)
+        {
+            //TODO: do something here
+        }
+
+        $results["All Sources"] = $scoreResults["results"];
+
         foreach($getSourceNamesResults["results"] as $row)
         {
             $sourceSpecificSql = $this->ScoreBySourceTypeSql($row["type"], $contentIds);
@@ -112,6 +123,43 @@ class TagClusteringEventHandler implements \Swiftriver\Core\EventDistribution\IE
         $event->arguments = $contentItems;
 
         return $event;
+    }
+
+    private function ScoreSql($contentIds)
+    {
+        $idString = $this->IdsToString($contentIds);
+
+        return
+            "select
+                c.id as 'contentId',
+                SUM(a.tagCount) /
+                    (
+                        select
+                            count(*)
+                        from
+                            SC_Content_Tags
+                    ) as 'score'
+            from
+                (
+                    select
+                        t.id as 'tagId',
+                        t.text as 'tagText',
+                        count(t.id) as 'tagCount'
+                    from
+                        SC_Tags t
+                            join SC_Content_Tags ct on t.id = ct.tagId
+                                join SC_Content c on c.id = ct.contentId
+                    group by
+                        t.id
+                ) a
+                join SC_Content_Tags ct on a.tagId = ct.tagId
+                    join SC_Content c on ct.contentId = c.id
+            where
+                a.tagCount > 1
+                and
+                c.id in $idString
+            group by
+                c.id";
     }
 
     private function ScoreBySourceTypeSql($sourceType, $contentIds)
