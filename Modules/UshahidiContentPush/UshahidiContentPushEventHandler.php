@@ -21,7 +21,7 @@ class UshahidiContentPushEventHandler implements \Swiftriver\Core\EventDistribut
      * @return string
      */
     public function Description() {
-        return "Activating this Reactor Turbine will cause all content that has been " .
+        return "Activating this plugin causes all content that has been " .
                "processed to be sent to the associated Ushahidi instance " .
                "as a new report.";
     }

@@ -7,11 +7,11 @@ include_once (dirname(__FILE__)."/TextForUrlParser.php");
 class SiLCCPreProcessingStep implements \Swiftriver\Core\PreProcessing\IPreProcessingStep {
 
     public function Description(){
-        return "This plugin sends your aggregated content to the Swift Web Service " .
-               "Tagging API. It then attempts to auto-tag content with the relevant keywords.";
+        return "This plugin sends your content to the Swift Auto-Tagging API." .
+               " It then auto-tags content with the relevant keywords.";
     }
     public function Name(){
-        return "SwiftTagger";
+        return "Auto-Tagging";
     }
     public function Process($contentItems, $configuration, $logger) {
         $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [Method invoked]", \PEAR_LOG_DEBUG);

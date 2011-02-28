@@ -27,8 +27,8 @@ class UshahidiAPIEventHandler implements \Swiftriver\Core\EventDistribution\IEve
     }
 
     /**
-     * This method returns an array of the required paramters that
-     * are nessesary to configure this event handler.
+     * This method returns an array of the required parameters that
+     * are necessary to configure this event handler.
      *
      * @return \Swiftriver\Core\ObjectModel\ConfigurationElement[]
      */

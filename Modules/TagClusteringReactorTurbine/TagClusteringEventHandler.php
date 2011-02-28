@@ -13,7 +13,7 @@ class TagClusteringEventHandler implements \Swiftriver\Core\EventDistribution\IE
      *
      * @return string
      */
-    public function Name() { return "Tag Clustering Reactor Turbine"; }
+    public function Name() { return "Tag Clustering"; }
 
     /**
      * This method should return a description describing what
@@ -21,7 +21,7 @@ class TagClusteringEventHandler implements \Swiftriver\Core\EventDistribution\IE
      *
      * @return string
      */
-    public function Description() { return "When you activate this turbine, tag based clustering scores will be shows."; }
+    public function Description() { return "Activating this turbine turns on tag-based clustering."; }
 
     /**
      * This method returns an array of the required paramters that

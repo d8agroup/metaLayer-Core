@@ -4,13 +4,13 @@ include_once(dirname(__FILE__)."/ServiceInterface.php");
 include_once(dirname(__FILE__)."/Parser.php");
 class SiCDSPreProcessingStep implements \Swiftriver\Core\PreProcessing\IPreProcessingStep {
     /**
-     * The short name for this pre processing step, should be no longer
+     * The short name for this pre-processing step, should be no longer
      * than 50 chars
      *
      * @return string
      */
     public function Name() {
-        return "SwiftDuplicationFilter";
+        return "Duplicate Content Filter";
     }
 
     /**
@@ -19,9 +19,8 @@ class SiCDSPreProcessingStep implements \Swiftriver\Core\PreProcessing\IPreProce
      * @return string
      */
     public function Description() {
-        return "This is the impulse turbine for the Swiftriver Content De-Duplication ".
-               "server. If activated, all content will be scanned by the SiCDS service and " .
-               "attempats will be made to prevent any duplicates from reaching you.";
+        return "This plugin, when activated, scans all content using the Swift Duplication Filter API and " .
+               "prevents any duplicates (including retweets) from reaching the app.";
     }
 
     /**

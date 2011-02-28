@@ -21,14 +21,14 @@ class UshahidiPassivePushEventHandler implements \Swiftriver\Core\EventDistribut
      * @return string
      */
     public function Description() {
-        return "Activating this Reactor Turbine will cause all content that has been " .
-               "processed and marked as trusted to be sent to the associated Ushahidi instance " .
+        return "Activating this plugin will cause all aggregated content " .
+               "to be sent to the associated Ushahidi instance " .
                "as a new report.";
     }
 
     /**
-     * This method returns an array of the required paramters that
-     * are nessesary to configure this event handler.
+     * This method returns an array of the required parameters that
+     * are necessary to configure this event handler.
      *
      * @return \Swiftriver\Core\ObjectModel\ConfigurationElement[]
      */
@@ -38,7 +38,7 @@ class UshahidiPassivePushEventHandler implements \Swiftriver\Core\EventDistribut
                     "Ushahidi Url",
                     "string",
                     "The fully qualified url to the Ushahidi instance you want to " .
-                    "communicate with (please dont include the API path, just the root)"),
+                    "communicate with (please don't include the API path, just the root)"),
         );
     }
 

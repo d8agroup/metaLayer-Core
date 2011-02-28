@@ -27,7 +27,7 @@ class ContentFromJSONParser {
      * Using the constructor parameters, this method
      * decodes the JSON and applies any tags that could be
      * extracted from the content. It returns the content
-     * with taggs.
+     * with tags.
      *
      * @return \Swiftriver\Core\ObjectModel\Content
      */
