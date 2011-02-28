@@ -76,7 +76,7 @@ class PreProcessingStepsConfigurationHandler extends BaseConfigurationHandler
             $element = $collection->addChild("step");
             $element->addAttribute("name", $step->name);
             $element->addAttribute("className", $step->className);
-            $element->addAttribute("filePath", $step->filePath);
+            $element->addAttribute("filePath", \str_replace("\\", "/", $step->filePath));
         }
 
         //Write the xml to the file

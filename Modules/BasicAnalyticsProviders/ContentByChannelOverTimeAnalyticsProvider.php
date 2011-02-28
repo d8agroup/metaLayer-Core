@@ -44,7 +44,7 @@ class ContentByChannelOverTimeAnalyticsProvider
 
         $currentDay = $yearDay;
 
-        $days = "";
+        $days = "'". ($currentDay + 1) ."',";
 
         while (($currentDay > 0) && (($yearDay - $currentDay) < $timeLimit))
         {

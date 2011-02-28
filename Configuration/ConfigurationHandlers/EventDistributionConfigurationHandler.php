@@ -62,19 +62,19 @@ class EventDistributionConfigurationHandler extends BaseConfigurationHandler {
         $collection = $root->addChild("eventHandlers");
 
         //Loop around the collection of event handlers
-        foreach($this->EventHandlers as $step) 
+        foreach($this->EventHandlers as $handler)
         {
             //If the collection element is null then continue
-            if($step == null)
+            if($handler == null)
                 continue;
 
             //Set up the element
             $element = $collection->addChild("handler");
 
             //Add the event handler properties
-            $element->addAttribute("name", $step->name);
-            $element->addAttribute("className", $step->className);
-            $element->addAttribute("filePath", $step->filePath);
+            $element->addAttribute("name", $handler->name);
+            $element->addAttribute("className", $handler->className);
+            $element->addAttribute("filePath", \str_replace("\\", "/", $handler->filePath));
         }
 
         //write out the configuration to xml

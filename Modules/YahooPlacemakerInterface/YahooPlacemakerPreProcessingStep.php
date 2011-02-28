@@ -26,7 +26,7 @@ class YahooPlacemakerPreProcessingStep implements \Swiftriver\Core\PreProcessing
         if(!key_exists($this->Name(), $config)) {
             $logger->log("PreProcessingSteps::YahooPlacemakerPreProcessingStep::Process [The Ushahidi Event Handler was called but no configuration exists for this module]", \PEAR_LOG_ERR);
             $logger->log("PreProcessingSteps::YahooPlacemakerPreProcessingStep::Process [Method finished]", \PEAR_LOG_DEBUG);
-            return;
+            return $contentItems;
         }
 
         $config = $config[$this->Name()];
@@ -35,7 +35,7 @@ class YahooPlacemakerPreProcessingStep implements \Swiftriver\Core\PreProcessing
             if(!key_exists($requiredParam->name, $config)) {
                 $logger->log("PreProcessingSteps::YahooPlacemakerPreProcessingStep::Process [The Ushahidi Event Handler was called but all the required configuration properties could not be loaded]", \PEAR_LOG_ERR);
                 $logger->log("PreProcessingSteps::YahooPlacemakerPreProcessingStep::Process [Method finished]", \PEAR_LOG_DEBUG);
-                return;
+                return $contentItems;
             }
         }
 
