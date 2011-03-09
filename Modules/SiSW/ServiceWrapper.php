@@ -38,6 +38,26 @@ class ServiceWrapper {
 
     /**
      *
+     * @param array $postData
+     * @param int $timeout
+     * @return string
+     */
+    public function MakeStandardPOSTRequest($postData, $timeout) {
+        $context = stream_context_create(
+            array(
+                'http' => array(
+                    'method' => 'POST',
+                    'header' => 'Content-type: application/x-www-form-urlencoded',
+                    'content' => http_build_query($postData, '', '&'),
+                    'timeout' => $timeout,
+                ),
+            ));
+        $returnData = file_get_contents($this->uri, false, $context);
+        return $returnData;
+    }
+
+    /**
+     *
      * @param string $json
      * @param int $timeout
      * @return string
