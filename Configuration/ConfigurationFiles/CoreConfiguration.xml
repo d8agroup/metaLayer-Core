@@ -23,7 +23,7 @@
          name="EnableDebugLogging"
          displayName="Set this to true if you want to enable debug level logging. Note that this can cause the log file to get BIG!"
          type="bool"
-         value="false"
+         value="true"
         />
     </properties>
 </configuration>

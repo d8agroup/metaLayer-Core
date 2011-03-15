@@ -70,32 +70,19 @@ class YahooPlacemakerPreProcessingStep implements \Swiftriver\Core\PreProcessing
         return $contentItems;
     }
 
-
-    private function curl_request($url, $postvars = null)
-    {
-        $ch = curl_init();
-        $timeout = 10; // set to zero for no timeout
-        curl_setopt ($ch, CURLOPT_URL, $url);
-        curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-
-        if($postvars != null)
-        {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars);
-        }
-
-        $file_contents = curl_exec($ch);
-        curl_close($ch);
-        return $file_contents;
-    }
-
     public function YahooPlacemakerRequest($location, $appid)
     {
         $encodedLocation = \urlencode($location);
         $url = "http://wherein.yahooapis.com/v1/document";
-        $postvars = "documentContent=$encodedLocation&documentType=text/plain&appid=$appid";
-        $return = $this->curl_request($url, $postvars);
+        $postvars = array
+        (
+            "documentContent" => $encodedLocation,
+            "documentType" => "text/plain",
+            "appid" => $appid
+        );
+        
+        $serviceWrapper = new \Swiftriver\Core\Modules\SiSW\ServiceWrapper($url);
+        $return = $serviceWrapper->MakePOSTRequest($postvars, 10);
         $xml = new \SimpleXMLElement($return);
         $long = (float) $xml->document->placeDetails->place->centroid->longitude;
         $latt = (float) $xml->document->placeDetails->place->centroid->latitude;

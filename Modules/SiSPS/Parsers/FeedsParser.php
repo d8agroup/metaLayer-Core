@@ -97,7 +97,7 @@ class FeedsParser implements IParser
             $source_name = ($source_name == null || $source_name == "") ? $feedUrl : $source_name . " @ " . $feedUrl;
             $source = \Swiftriver\Core\ObjectModel\ObjectFactories\SourceFactory::CreateSourceFromIdentifier($source_name, $channel->trusted);
             $source->name = $source_name;
-            $source->email = $feedItem->get_author()->email;
+            $source->email = isset($feedItem->get_author()->email) ? $feedItem->get_author()->email : null;
             $source->parent = $channel->id;
             $source->type = $channel->type;
             $source->subType = $channel->subType;

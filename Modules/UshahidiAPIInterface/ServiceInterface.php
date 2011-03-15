@@ -13,7 +13,7 @@ class ServiceInterface {
     public function InterafceWithService($uri, $parameters, $configuration) {
         include_once($configuration->ModulesDirectory."/SiSW/ServiceWrapper.php");
         $service = new \Swiftriver\Core\Modules\SiSW\ServiceWrapper($uri);
-        $return = $service->MakeStandardPOSTRequest($parameters, 10);
+        $return = $service->MakePOSTRequest($parameters, 10);
         return $return;
     }
 }

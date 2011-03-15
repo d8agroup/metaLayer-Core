@@ -39,6 +39,29 @@ class CoreConfigurationHandler extends BaseConfigurationHandler
     public $EnableDebugLogging = false;
 
     /**
+     * Where a proxy server is required, it can be stored in
+     * this variable.
+     * @var string
+     */
+    public $ProxyServer;
+
+    /**
+     * Where you are using a proxy server and it requires auth
+     * then use this variable to hold the user name
+     *
+     * @var string
+     */
+    public $ProxyServerUserName;
+
+    /**
+     * Where you are using a proxy server and it requires auth
+     * then use this variable to hold the Password
+     *
+     * @var string
+     */
+    public $ProxyServerPassword;
+
+    /**
      * The constructor for the CoreConfigurationHandler
      * @param string $configurationFilePath
      */
@@ -64,6 +87,15 @@ class CoreConfigurationHandler extends BaseConfigurationHandler
                     break;
                 case "BaseLanguageCode" :
                     $this->BaseLanguageCode = (string) $property["value"];
+                    break;
+                case "ProxyServer" :
+                    $this->ProxyServer = (string) $property["value"];
+                    break;
+                case "ProxyServerUserName" :
+                    $this->ProxyServerUserName = (string) $property["value"];
+                    break;
+                case "ProxyServerPassword" :
+                    $this->ProxyServerPassword = (string) $property["value"];
                     break;
                 case "EnableDebugLogging" :
                     $value = (string) $property["value"];
