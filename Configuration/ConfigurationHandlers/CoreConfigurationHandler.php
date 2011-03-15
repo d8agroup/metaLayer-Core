@@ -7,6 +7,8 @@ namespace Swiftriver\Core\Configuration\ConfigurationHandlers;
  */
 class CoreConfigurationHandler extends BaseConfigurationHandler
 {
+    public $ConfigurationFilePath;
+
     /**
      * The name of the configuration section
      * @var string
@@ -67,6 +69,8 @@ class CoreConfigurationHandler extends BaseConfigurationHandler
      */
     public function __construct($configurationFilePath) 
     {
+        $this->ConfigurationFilePath = $configurationFilePath;
+
         //use the base calss to open the config file
         $xml = parent::SaveOpenConfigurationFile($configurationFilePath, "properties");
 
@@ -103,6 +107,66 @@ class CoreConfigurationHandler extends BaseConfigurationHandler
                     break;
             }
         }
+    }
+
+    public function Save()
+    {
+        $root = new \SimpleXMLElement("<configuration></configuration>");
+
+        $collection = $root->addChild("properties");
+
+        $modulesDirectoryElement = $collection->addChild("property");
+        $modulesDirectoryElement->addAttribute("name", "ModulesDirectory");
+        $modulesDirectoryElement->addAttribute("displayName", "Enter the path to the modules directory relative to the base directory of the Core");
+        $modulesDirectoryElement->addAttribute("type", "string");
+        $modulesDirectoryElement->addAttribute("value", \str_replace(dirname(__FILE__)."/../..", "", $this->ModulesDirectory));
+
+        $cachingDirectoryElement = $collection->addChild("property");
+        $cachingDirectoryElement->addAttribute("name", "CachingDirectory");
+        $cachingDirectoryElement->addAttribute("displayName", "Enter the path to the cache directory relative to the base directory of the Core");
+        $cachingDirectoryElement->addAttribute("type", "string");
+        $cachingDirectoryElement->addAttribute("value", \str_replace(dirname(__FILE__)."/../..", "", $this->CachingDirectory));
+
+        $baseLanguageElement = $collection->addChild("property");
+        $baseLanguageElement->addAttribute("name", "BaseLanguageCode");
+        $baseLanguageElement->addAttribute("displayName", "Enter the two letter ISO 639-1 language code used as the base reference for all other languages");
+        $baseLanguageElement->addAttribute("type", "string");
+        $baseLanguageElement->addAttribute("value", $this->BaseLanguageCode);
+
+        $debugLoggingElement = $collection->addChild("property");
+        $debugLoggingElement->addAttribute("name", "EnableDebugLogging");
+        $debugLoggingElement->addAttribute("displayName", "Set this to true if you want to enable debug level logging. Note that this can cause the log file to get BIG!");
+        $debugLoggingElement->addAttribute("type", "string");
+        $debugLoggingElement->addAttribute("value", $this->EnableDebugLogging ? "true" : "false");
+
+        if($this->ProxyServer != "" && $this->ProxyServer != null)
+        {
+            $proxyServerElement = $collection->addChild("property");
+            $proxyServerElement->addAttribute("name", "ProxyServer");
+            $proxyServerElement->addAttribute("displayName", "Set the url of a proxi server is required");
+            $proxyServerElement->addAttribute("type", "string");
+            $proxyServerElement->addAttribute("value", $this->ProxyServer);
+        }
+
+        if($this->ProxyServerUserName != "" && $this->ProxyServerUserName != null)
+        {
+            $proxyUsernameElement = $collection->addChild("property");
+            $proxyUsernameElement->addAttribute("name", "ProxyServerUserName");
+            $proxyUsernameElement->addAttribute("displayName", "Set the username for the proxi server is required");
+            $proxyUsernameElement->addAttribute("type", "string");
+            $proxyUsernameElement->addAttribute("value", $this->ProxyServerUserName);
+        }
+
+        if($this->ProxyServerPassword != "" && $this->ProxyServerPassword != null)
+        {
+            $proxyPasswordElement = $collection->addChild("property");
+            $proxyPasswordElement->addAttribute("name", "ProxyServerPassword");
+            $proxyPasswordElement->addAttribute("displayName", "Set the password for the proxi server is required");
+            $proxyPasswordElement->addAttribute("type", "string");
+            $proxyPasswordElement->addAttribute("value", $this->ProxyServerPassword);
+        }
+        
+        $root->asXML($this->ConfigurationFilePath);
     }
 }
 ?>
