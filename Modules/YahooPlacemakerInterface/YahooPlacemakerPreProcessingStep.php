@@ -24,7 +24,7 @@ class YahooPlacemakerPreProcessingStep implements \Swiftriver\Core\PreProcessing
         $config = \Swiftriver\Core\Setup::DynamicModuleConfiguration()->Configuration;
 
         if(!key_exists($this->Name(), $config)) {
-            $logger->log("PreProcessingSteps::YahooPlacemakerPreProcessingStep::Process [The Ushahidi Event Handler was called but no configuration exists for this module]", \PEAR_LOG_ERR);
+            $logger->log("PreProcessingSteps::YahooPlacemakerPreProcessingStep::Process [The Yahoo Placemaker Turbine was called but no configuration exists for this module]", \PEAR_LOG_ERR);
             $logger->log("PreProcessingSteps::YahooPlacemakerPreProcessingStep::Process [Method finished]", \PEAR_LOG_DEBUG);
             return $contentItems;
         }
@@ -33,7 +33,7 @@ class YahooPlacemakerPreProcessingStep implements \Swiftriver\Core\PreProcessing
 
         foreach($this->ReturnRequiredParameters() as $requiredParam) {
             if(!key_exists($requiredParam->name, $config)) {
-                $logger->log("PreProcessingSteps::YahooPlacemakerPreProcessingStep::Process [The Ushahidi Event Handler was called but all the required configuration properties could not be loaded]", \PEAR_LOG_ERR);
+                $logger->log("PreProcessingSteps::YahooPlacemakerPreProcessingStep::Process [The Yahoo Placemaker Turbine was called but all the required configuration properties could not be loaded]", \PEAR_LOG_ERR);
                 $logger->log("PreProcessingSteps::YahooPlacemakerPreProcessingStep::Process [Method finished]", \PEAR_LOG_DEBUG);
                 return $contentItems;
             }
@@ -101,7 +101,8 @@ class YahooPlacemakerPreProcessingStep implements \Swiftriver\Core\PreProcessing
     }
 
     public function ReturnRequiredParameters() {
-        return array(
+        return array
+        (
             new \Swiftriver\Core\ObjectModel\ConfigurationElement(
                     "Yahoo Placemaker App Id",
                     "string",
