@@ -1,14 +1,16 @@
 <?php
 namespace Swiftriver\PreProcessingSteps;
-class GoogleEnterpriseLanguageServicePreProcessingStep implements \Swiftriver\Core\PreProcessing\IPreProcessingStep {
-
-    public function __construct()
-    {
-        
-    }
-
+class GoogleEnterpriseLanguageServicePreProcessingStep implements \Swiftriver\Core\PreProcessing\IPreProcessingStep
+{
     /**
-     * 
+     * Given a collection of content items, this method will use the Enterprise version
+     * of the Google Translation Services to both assertain the language the content
+     * was writen in and where possible and nessasary, translate that content to
+     * the base language. 
+     * Each piece of content that comes into this method, can expect to be returned with this
+     * pattern - ie: the $content->text[0] LanguageSpecificText class being in the base
+     * language and (if applicable) the original LanguageSpecificText class begin at
+     * $content->text[1]
      *
      * @param \Swiftriver\Core\ObjectModel\Content[] $contentItems
      * @param \Swiftriver\Core\Configuration\ConfigurationHandlers\CoreConfigurationHandler $configuration
