@@ -15,6 +15,12 @@ class StartTwitterStreamer extends TwitterStreamingServicesBase
             parent::FormatErrorMessage("There was an error in the JSON supplied, please consult the API documentation and try again.");
         }
 
+        //create a channel for the streamed content
+        $channelJson = '{"id":"TWITTERSTREAM","type":"Twitter Stream","subType":"Filter","name":"Twitter Stream","active":false}';
+        $channel = \Swiftriver\Core\ObjectModel\ObjectFactories\ChannelFactory::CreateChannelFromJSON($channelJson);
+        $channelRepository = new \Swiftriver\Core\DAL\Repositories\ChannelRepository();
+        $channelRepository->SaveChannels(array($channel));
+
         $filename = \Swiftriver\Core\Setup::Configuration()->CachingDirectory . "/TwitterStreamingController.tmp";
 
         $fp = \fopen($filename, "w");
@@ -44,7 +50,21 @@ class StartTwitterStreamer extends TwitterStreamingServicesBase
 
         $command = "php " . \dirname(__FILE__) . "/../../Modules/Phirehose/starttwitterstreamer.php";
 
-        \exec($command);
+        $this->execInBackground($command);
+        return;
+        //\exec($command);
+    }
+
+    private function execInBackground($cmd)
+    {
+        if (substr(php_uname(), 0, 7) == "Windows")
+        {
+            pclose(popen("start /B ". $cmd, "r"));
+        }
+        else
+        {
+            exec($cmd . " > /dev/null &");
+        }
     }
 }
 ?>

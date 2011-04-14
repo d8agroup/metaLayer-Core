@@ -48,6 +48,12 @@ class TwitterStreamingSearchClient extends Phirehose
         if(!\file_exists($filename))
             parent::disconnect();
 
+        $sec = (int) date('s');
+
+        //this is called every 5 secs so to give us a break we ease off in the last 30 seconds of every minute
+        if($sec > 30)
+            return;
+
         $logger = \Swiftriver\Core\Setup::GetLogger();
 
         $queueFiles = glob($this->queueDir . '/phirehose-queue*.queue');
@@ -150,24 +156,67 @@ class TwitterStreamingSearchClient extends Phirehose
         // Lock file
         flock($fp, LOCK_EX);
 
-        // Loop over each line (1 line per status)
-        $statusCounter = 0;
+        $content = array();
+
+        $logger->log("Core::Modules::TwitterStreamingSearchClient: START Looping through content", \PEAR_LOG_DEBUG);
+
         while ($rawStatus = fgets($fp, 4096))
         {
-            $statusCounter ++;
+            try
+            {
+                $status = \json_decode($rawStatus);
 
-            /** **************** NOTE ********************
-            * This is the part where you would normally do your processing. If you're extracting/trending information
-            * about the tweets it should happen here, where it doesn't matter so much if things are slow (you will
-            * catch up on the next loop).
-            */
-            $logger->log($rawStatus, \PEAR_LOG_INFO);
-            /*
-            $data = json_decode($rawStatus, true);
-            if (is_array($data) && isset($data['user']['screen_name']))
-                $logger->log("Core::Modules::SiSPS::Parsers::TwitterParser::Stream " . $data['user']['screen_name'] . ': ' . urldecode($data['text']), \PEAR_LOG_INFO);
-            */
+                $source_name = $status->user->screen_name;
+                $source = \Swiftriver\Core\ObjectModel\ObjectFactories\SourceFactory::CreateSourceFromIdentifier($source_name, false);
+                $source->name = $source_name;
+                $source->link = "http://twitter.com/" . $source_name;
+
+                $source->parent = "TWITTERSTREAM";
+                $source->type = "Twitter Stream";
+                $source->subType = "Filter";
+                $source->applicationIds["twitter"] = $status->user->id;
+                $source->applicationProfileImages["twitter"] = $status->user->profile_image_url;
+
+                //Create a new Content item
+                $item = \Swiftriver\Core\ObjectModel\ObjectFactories\ContentFactory::CreateContent($source);
+
+                //Fill the Content Item
+                $item->text[] = new \Swiftriver\Core\ObjectModel\LanguageSpecificText(
+                        null, //here we set null as we dont know the language yet
+                        $status->text,
+                        array($status->text));
+
+                $item->link = "http://twitter.com/" . $source_name . "/statuses/" . $status->id_str;
+                $item->date = strtotime($status->created_at);
+
+                /* GEO is not yet supported on this streamin feed
+                if($tweet->geo != null && $tweet->geo->type == "Point" && \is_array($tweet->geo->coordinates))
+                    $item->gisData[] = new \Swiftriver\Core\ObjectModel\GisData (
+                            $tweet->geo->coordinates[1],
+                            $tweet->geo->coordinates[0],
+                            "");
+                */
+
+                //Sanitize the tweet text into a DIF collection
+                $sanitizedTweetDiffCollection = $this->ParseTweetToSanitizedTweetDiffCollection($item);
+
+                //Add the dif collection to the item
+                $item->difs = array($sanitizedTweetDiffCollection);
+
+                $content[] = $item;
+            }
+            catch (\Exception $e)
+            {
+                $logger->log("Core::Modules::TwitterStreamingSearchClient: $e", \PEAR_LOG_ERR);
+            }
         }
+
+        $logger->log("Core::Modules::TwitterStreamingSearchClient: START Looping through content", \PEAR_LOG_DEBUG);
+
+        $workflow = new \Swiftriver\Core\Workflows\ContentServices\ProcessContent();
+
+        //Here we are running the workflow without pre processing.
+        $workflow->RunWorkflow($content, false);
 
         // Release lock and close
         flock($fp, LOCK_UN);
@@ -177,6 +226,53 @@ class TwitterStreamingSearchClient extends Phirehose
         $logger->log("Core::Modules::TwitterStreamingSearchClient finshed processing " . $queueFile, \PEAR_LOG_DEBUG);
         unlink($queueFile);
 
+    }
+
+    /**
+     * @param \Swiftriver\Core\ObjectModel\Content $item
+     * @return \Swiftriver\Core\ObjectModel\DuplicationIdentificationFieldCollection
+     */
+    private function ParseTweetToSanitizedTweetDiffCollection($item) {
+        //Get the original text
+        $tweetText = $item->text[0]->title;
+
+        //Break the text down into words
+        $tweetTextParts = explode(" ", $tweetText);
+
+        //Set up the sanitized return string
+        $sanitizedText = "";
+
+        //loop through all the words
+        foreach($tweetTextParts as $part) {
+            //to lowwer the word
+            $part = strtolower($part);
+
+            //If the word contains none standard chars, continue
+            if(preg_match("/[^\w\d\.\(\)\!']/si", $part))
+                continue;
+
+            //if the owrd is just rt then continue
+            if($part == "rt")
+                continue;
+
+            //Add the word to the sanitized
+            $sanitizedText .= $part . " ";
+        }
+
+        //Create a new Diff
+        $dif = new \Swiftriver\Core\ObjectModel\DuplicationIdentificationField(
+                "Sanitized Tweet",
+                utf8_encode($sanitizedText)
+        );
+
+        //Create the new diff collection
+        $difCollection = new \Swiftriver\Core\ObjectModel\DuplicationIdentificationFieldCollection(
+                "Sanitized Tweet",
+                array($dif)
+        );
+
+        //Return the diff collection
+        return $difCollection;
     }
 
 }
