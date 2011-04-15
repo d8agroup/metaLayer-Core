@@ -167,6 +167,8 @@ class TwitterStreamingSearchClient extends Phirehose
                 $status = \json_decode($rawStatus);
 
                 $source_name = $status->user->screen_name;
+                if ($source_name == null || $source_name == "")
+                    $source_name = "UNKNOWN";
                 $source = \Swiftriver\Core\ObjectModel\ObjectFactories\SourceFactory::CreateSourceFromIdentifier($source_name, false);
                 $source->name = $source_name;
                 $source->link = "http://twitter.com/" . $source_name;

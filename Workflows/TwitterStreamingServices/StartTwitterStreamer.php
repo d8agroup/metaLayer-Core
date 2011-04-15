@@ -51,8 +51,10 @@ class StartTwitterStreamer extends TwitterStreamingServicesBase
         $command = "php " . \dirname(__FILE__) . "/../../Modules/Phirehose/starttwitterstreamer.php";
 
         $this->execInBackground($command);
+
+        $logger->log("Core::ServiceAPI::TwitterStreamingServices::StartTwitterStreamer::RunWorkflow [Method finished]", \PEAR_LOG_INFO);
+
         return;
-        //\exec($command);
     }
 
     private function execInBackground($cmd)
