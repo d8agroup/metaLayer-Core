@@ -162,6 +162,7 @@ include_once(dirname(__FILE__)."/Workflows/PreProcessingSteps/PreProcessingSteps
 include_once(dirname(__FILE__)."/Workflows/Analytics/AnalyticsWorkflowBase.php");
 include_once(dirname(__FILE__)."/Workflows/TwitterStreamingServices/TwitterStreamingServicesBase.php");
 include_once(Setup::Configuration()->ModulesDirectory."/SiSPS/Parsers/IParser.php");
+include_once(Setup::Configuration()->ModulesDirectory."/SiSPS/PushParsers/IPushParser.php");
 
 //include everything else
 $directories = array(

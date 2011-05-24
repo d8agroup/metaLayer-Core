@@ -78,5 +78,20 @@ class SwiftriverSourceParsingService {
 
         return $parsers;
     }
+
+    public function ListAvailablePushParsers(){
+        $logger = \Swiftriver\Core\Setup::GetLogger();
+        $logger->log("Core::Modules::SiSPS::SwiftriverSourceParsingService::ListAvailablePushChannels [Method invoked]", \PEAR_LOG_DEBUG);
+
+        $logger->log("Core::Modules::SiSPS::SwiftriverSourceParsingService::ListAvailablePushChannels [START: Getting All Push Parsers from the ParserFactory]", \PEAR_LOG_DEBUG);
+
+        $parsers = ParserFactory::ReturnAllAvailablePushParsers();
+
+        $logger->log("Core::Modules::SiSPS::SwiftriverSourceParsingService::ListAvailablePushChannels [END: Getting All Push Parsers from the ParserFactory]", \PEAR_LOG_DEBUG);
+
+        $logger->log("Core::Modules::SiSPS::SwiftriverSourceParsingService::ListAvailablePushChannels [Method finished]", \PEAR_LOG_DEBUG);
+
+        return $parsers;
+    }
 }
 ?>

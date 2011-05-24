@@ -39,14 +39,51 @@ class ParserFactory{
         return new $type();
     }
 
+    public static function ReturnAllAvailablePushParsers(){
+        $logger = \Swiftriver\Core\Setup::GetLogger();
+        $logger->log("Core::Modules::SiSPS::ParserFactory::ReturnAllAvailablePushParsers [Method invoked]", \PEAR_LOG_DEBUG);
+
+        $parsers = array();
+        
+        $logger->log("Core::Modules::SiSPS::ParserFactory::ReturnAllAvailablePushParsers [START: Directory Itteration]", \PEAR_LOG_DEBUG);
+        
+        $dirItterator = new \RecursiveDirectoryIterator(dirname(__FILE__)."/PushParsers/");
+        $iterator = new \RecursiveIteratorIterator($dirItterator, \RecursiveIteratorIterator::SELF_FIRST);
+        foreach($iterator as $file) {
+            if($file->isFile()) {
+                $filePath = $file->getPathname();
+                if(strpos($filePath, ".php") && !strpos($filePath, "IPushParser")) {
+                    try{
+                        $typeString = "\\Swiftriver\\Core\\Modules\\SiSPS\\PushParsers\\".$file->getFilename();
+                        $type = str_replace(".php", "", $typeString);
+                        $object = new $type();
+                        if($object instanceof PushParsers\IPushParser) {
+                            $logger->log("Core::Modules::SiSPS::ParserFactory::ReturnAllAvailablePushParsers [Adding type $type]", \PEAR_LOG_DEBUG);
+                            $parsers[] = $object;
+                        }
+                    }
+                    catch(\Exception $e) {
+                        $logger->log("Core::Modules::SiSPS::ParserFactory::ReturnAllAvailablePushParsers [error adding type $type]", \PEAR_LOG_DEBUG);
+                        $logger->log("Core::Modules::SiSPS::ParserFactory::ReturnAllAvailablePushParsers [$e]", \PEAR_LOG_ERR);
+                        continue;
+                    }
+                }
+            }
+        }
+
+        $logger->log("Core::Modules::SiSPS::ParserFactory::ReturnAllAvailablePushParsers [END: Directory Itteration]", \PEAR_LOG_DEBUG);
+
+        return $parsers;
+    }
+
     public static function ReturnAllAvailableParsers(){
         $logger = \Swiftriver\Core\Setup::GetLogger();
         $logger->log("Core::Modules::SiSPS::ParserFactory::ReturnAllAvailableParsers [Method invoked]", \PEAR_LOG_DEBUG);
 
         $parsers = array();
-        
+
         $logger->log("Core::Modules::SiSPS::ParserFactory::ReturnAllAvailableParsers [START: Directory Itteration]", \PEAR_LOG_DEBUG);
-        
+
         $dirItterator = new \RecursiveDirectoryIterator(dirname(__FILE__)."/Parsers/");
         $iterator = new \RecursiveIteratorIterator($dirItterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach($iterator as $file) {
@@ -74,6 +111,27 @@ class ParserFactory{
         $logger->log("Core::Modules::SiSPS::ParserFactory::ReturnAllAvailableParsers [END: Directory Itteration]", \PEAR_LOG_DEBUG);
 
         return $parsers;
+    }
+
+    public static function GetParserByPushOrigin($origin)
+    {
+        $logger = \Swiftriver\Core\Setup::GetLogger();
+        $logger->log("Core::Modules::SiSPS::ParserFactory::GetParserByPushOrigin [Method invoked]", \PEAR_LOG_DEBUG);
+
+        //Append the word PushParser to the origin
+        $origin = \str_replace(" ", "", $origin) . "PushParser";
+
+        $type = "\\Swiftriver\\Core\\Modules\\SiSPS\\PushParsers\\".$origin;
+        if(!class_exists($type)) {
+            $logger->log("Core::Modules::SiSPS::ParserFactory::GetParserByPushOrigin [Class $type not found. Returning null]", \PEAR_LOG_DEBUG);
+            $logger->log("Core::Modules::SiSPS::ParserFactory::GetParserByPushOrigin [Method finished]", \PEAR_LOG_DEBUG);
+            return null;
+        }
+
+        $logger->log("Core::Modules::SiSPS::ParserFactory::GetParserByPushOrigin [Method finished]", \PEAR_LOG_DEBUG);
+
+        //Finally, return a new Parser
+        return new $type();
     }
 }
 ?>
