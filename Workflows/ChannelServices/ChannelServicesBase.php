@@ -13,9 +13,28 @@ class ChannelServicesBase extends \Swiftriver\Core\Workflows\WorkflowBase
 
         foreach($parsers as $parser) {
             $channelType;
+            $channelType->parserType = "pull";
             $channelType->type = $parser->ReturnType();
             $channelType->subTypes = $parser->ListSubTypes();
             $channelType->configurationProperties = $parser->ReturnRequiredParameters();
+            $return->channelTypes[] = $channelType;
+            unset($channelType);
+        }
+
+        return json_encode($return);
+    }
+
+    public function ParsePushParsersToJSON($parsers)
+    {
+        $return;
+
+        $return->channelTypes  = array();
+
+        foreach($parsers as $parser) {
+            $channelType;
+            $channelType->parserType = "push";
+            $channelType->type = $parser->ReturnType();
+            $channelType->description = $parser->GetDescription();
             $return->channelTypes[] = $channelType;
             unset($channelType);
         }
