@@ -26,6 +26,11 @@ class ChannelServicesBase extends \Swiftriver\Core\Workflows\WorkflowBase
 
     public function ParsePushParsersToJSON($parsers)
     {
+        $logger = \Swiftriver\Core\Setup::GetLogger();
+        $logger->log("Core::Workflows::ChannelServices::ChannelServicesBase::ParsePushParsersToJSON [Method Invoked]", \PEAR_LOG_INFO);
+
+        $logger->log("Core::Workflows::ChannelServices::ChannelServicesBase::ParsePushParsersToJSON [START: Encoding JSON]", \PEAR_LOG_INFO);
+
         $return;
 
         $return->channelTypes  = array();
@@ -35,9 +40,12 @@ class ChannelServicesBase extends \Swiftriver\Core\Workflows\WorkflowBase
             $channelType->parserType = "push";
             $channelType->type = $parser->ReturnType();
             $channelType->description = $parser->GetDescription();
+            $channelType->settings = $parser->GetSettings();
             $return->channelTypes[] = $channelType;
             unset($channelType);
         }
+
+        $logger->log("Core::Workflows::ChannelServices::ChannelServicesBase::ParsePushParsersToJSON [END: Encoding JSON]", \PEAR_LOG_INFO);
 
         return json_encode($return);
     }
@@ -81,7 +89,7 @@ class ChannelServicesBase extends \Swiftriver\Core\Workflows\WorkflowBase
 
         $json = rtrim($json, ",").']}';
 
-        $logger->log("Core:Workflows::ChannelServices::ChannelServicesBase::ParseChannelsToJSON [Method finsihed]", \PEAR_LOG_INFO);
+        $logger->log("Core::Workflows::ChannelServices::ChannelServicesBase::ParseChannelsToJSON [Method finsihed]", \PEAR_LOG_INFO);
 
         return $json;
     }

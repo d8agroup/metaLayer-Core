@@ -1,12 +1,10 @@
 <?php
-
 /**
- * @author am[at]swiftly[dot]org
- */
-
+* @author am[at]swiftly[dot]org
+*/
 namespace Swiftriver\Core\Modules\SiSPS;
 class SwiftriverPushParsingService {
-    /**
+/**
      * This method will take the information prvided in the
      * instance of a \Swiftriver\Core\ObjectModel\Source object
      * and will make a call to the channel to fetch and content
@@ -19,13 +17,14 @@ class SwiftriverPushParsingService {
      * @param $get_content
      * @return Swiftriver\Core\ObjectModel\Content[] $contentItems
      */
-    public function FetchContentFromChannel($parser, $raw_content = null, $post_content = null, $get_content = null) {
+    public function FetchContentFromChannel($parser, $raw_content = null, $post_content = null, $get_content = null, $file_content = null) {
         $logger = \Swiftriver\Core\Setup::GetLogger();
         $logger->log("Core::Modules::SiSPS::SwiftriverPushParsingService::FetchContentFromChannel [Method invoked]", \PEAR_LOG_DEBUG);
 
         if((!isset($raw_content) || $raw_content == null)
            && (!isset($post_content) || $post_content == null)
-           && (!isset($get_content) || $get_content == null)) {
+           && (!isset($get_content) || $get_content == null)
+           && (!isset($file_content) || $file_content == null)){
             $logger->log("Core::Modules::SiSPS::SwiftriverPushParsingService::FetchContentFromChannel [The channel object param is null]", \PEAR_LOG_DEBUG);
             $logger->log("Core::Modules::SiSPS::SwiftriverPushParsingService::FetchContentFromChannel [Method finished]", \PEAR_LOG_DEBUG);
             return;
@@ -46,7 +45,7 @@ class SwiftriverPushParsingService {
         try
         {
             //Get and parse all avaliable content items from the parser
-            $contentItems = $parser->PushAndParse($raw_content, $post_content, $get_content);
+            $contentItems = $parser->PushAndParse($raw_content, $post_content, $get_content, $file_content);
         }
         catch(\Exception $e)
         {

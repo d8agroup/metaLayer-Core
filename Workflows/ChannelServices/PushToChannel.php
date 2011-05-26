@@ -1,9 +1,7 @@
 <?php
-
 /**
- * @author am[at]swiftly[dot]org
- */
-
+* @author am[at]swiftly[dot]org
+*/
 namespace Swiftriver\Core\Workflows\ChannelServices;
 class PushToChannel extends ChannelServicesBase {
      /**
@@ -56,8 +54,14 @@ class PushToChannel extends ChannelServicesBase {
                 $get_content = $_GET;
             }
 
+            $file_content = null;
+
+            if($_FILES) {
+                $file_content = $_FILES;
+            }
+
             $SiSPS = new \Swiftriver\Core\Modules\SiSPS\SwiftriverPushParsingService();
-            $rawContent = $SiSPS->FetchContentFromChannel($parser, $raw_content, $post_content, $get_content);
+            $rawContent = $SiSPS->FetchContentFromChannel($parser, $raw_content, $post_content, $get_content, $file_content);
         }
         catch (\Exception $e)
         {
