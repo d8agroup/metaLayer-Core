@@ -1,4 +1,7 @@
 <?php
+/**
+* @author am[at]swiftly[dot]org
+*/
 namespace Swiftriver\Core\Modules\SiSPS\PushParsers;
 class CSVPushParser implements IPushParser
 {
@@ -7,6 +10,7 @@ class CSVPushParser implements IPushParser
      * @param $raw_content
      * @param $post_content
      * @param $get_content
+     * @param $file_content
      * @return \Swiftriver\Core\ObjectModel\Content[] contentItems
      */
     public function PushAndParse($raw_content = null, $post_content = null, $get_content = null, $file_content = null)
