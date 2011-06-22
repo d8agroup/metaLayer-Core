@@ -1,2 +1,6 @@
 /Cache/*
 *.bat
+.buildpath
+.project
+.settings
+*_*.xml

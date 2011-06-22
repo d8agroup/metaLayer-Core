@@ -43,7 +43,7 @@ class EventDistributor
         
         $logger->log("Core::EventDistribution::EventDistributor [Method invoked]", \PEAR_LOG_DEBUG);
 
-        $modulesDirectory = \Swiftriver\Core\Setup::Configuration()->ModulesDirectory;
+        $modulesDirectory = \Swiftriver\Core\Setup::ModulesDirectory();
         
         $configuration = \Swiftriver\Core\Setup::Configuration();
 
@@ -126,7 +126,7 @@ class EventDistributor
 
         $handlers = array();
 
-        $modulesDirectory = \Swiftriver\Core\Setup::Configuration()->ModulesDirectory;
+        $modulesDirectory = \Swiftriver\Core\Setup::ModulesDirectory();
 
         $dirItterator = new \RecursiveDirectoryIterator($modulesDirectory);
 

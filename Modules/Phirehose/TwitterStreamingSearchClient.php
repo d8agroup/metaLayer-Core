@@ -21,7 +21,7 @@ class TwitterStreamingSearchClient extends Phirehose
 
     public function __construct($username, $password)
     {
-        $this->queueDir = \Swiftriver\Core\Setup::Configuration()->CachingDirectory;
+        $this->queueDir = \Swiftriver\Core\Setup::CachingDirectory();
         $this->rotateInterval = 5;
 
         return parent::__construct($username, $password, Phirehose::METHOD_FILTER);
@@ -44,7 +44,7 @@ class TwitterStreamingSearchClient extends Phirehose
 
     public function checkFilterPredicates()
     {
-        $filename = \Swiftriver\Core\Setup::Configuration()->CachingDirectory . "/TwitterStreamingController.go";
+        $filename = \Swiftriver\Core\Setup::CachingDirectory() . "/TwitterStreamingController.go";
         if(!\file_exists($filename))
             parent::disconnect();
 

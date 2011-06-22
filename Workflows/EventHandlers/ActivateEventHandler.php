@@ -7,6 +7,8 @@ class ActivateEventHandler extends EventHandlersBase
 {
     public function RunWorkflow($json, $key)
     {
+        parent::RegisterKey($key);
+    	
         $logger = \Swiftriver\Core\Setup::GetLogger();
         $logger->log("Core::Workflows::EventHandlers::ActivateEventHandlers::RunWorkflow [Method invoked]", \PEAR_LOG_INFO);
 

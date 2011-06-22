@@ -814,7 +814,7 @@ class DataContext implements
 
         $filters = array();
 
-        $time = (\key_exists("time", $parameters)) ? $parameters["time"] : \time();
+        $time = (\key_exists("time", $parameters) && $parameters["time"] != null) ? $parameters["time"] : \time();
         $filters[] = "content.date < $time";
 
         $state = (key_exists("state", $parameters)) ? $parameters["state"] : null;

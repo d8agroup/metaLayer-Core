@@ -3,6 +3,8 @@ namespace Swiftriver\Core\Workflows;
 /**
  * @author mg@swiftly.com
  */
+use Swiftriver\Core;
+
 class WorkflowBase
 {
     /**
@@ -39,7 +41,15 @@ class WorkflowBase
     public function CheckKey($key) 
     {
         //BETA - accept all dev calls
-        return $key == "swiftriver_dev";
+        return true;
+    }
+    
+    public function RegisterKey($key, $appTemplate = null)
+    {
+    	if ($appTemplate == null)
+    		\Swiftriver\Core\Setup::InitWithAPIKey($key);
+    	else
+    		\Swiftriver\Core\Setup::InitWithAPIKey($key, $appTemplate);
     }
 }
 ?>

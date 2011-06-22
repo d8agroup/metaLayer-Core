@@ -7,6 +7,8 @@ class ActivatePreProcessingStep extends PreProcessingStepsBase
 {
     public function RunWorkflow($json, $key)
     {
+        parent::RegisterKey($key);
+    	
         $logger = \Swiftriver\Core\Setup::GetLogger();
 
         $logger->log("Core::Workflows::PreProcessingSteps::ActivatePreProcessingStep::RunWorkflow [Method invoked]", \PEAR_LOG_INFO);

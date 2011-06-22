@@ -6,6 +6,8 @@ namespace Swiftriver\Core\Configuration\ConfigurationHandlers;
  */
 class DALConfigurationHandler extends BaseConfigurationHandler
 {
+	private $ConfigurationFilePath;
+	
     /**
      * The PHP5.3 namespace quialified class name of the implemetor
      * of the Swiftriver\DAL\DataContectInterfaces\IDataContext
@@ -26,6 +28,8 @@ class DALConfigurationHandler extends BaseConfigurationHandler
      */
     public function __construct($configurationFilePath) 
     {
+    	$this->ConfigurationFilePath = $configurationFilePath;
+    	
         //Use the base class to read in the configuration
         $xml = parent::SaveOpenConfigurationFile($configurationFilePath, "properties");
 
@@ -36,13 +40,34 @@ class DALConfigurationHandler extends BaseConfigurationHandler
             switch((string) $property["name"])
             {
                 case "DataContextType" :
-                    $this->DataContextType = $property["value"];
+                    $this->DataContextType = (string) $property["value"];
                     break;
                 case "DataContextPath" :
-                    $this->DataContextDirectory = $property["value"];
+                    $this->DataContextDirectory = (string) $property["value"];
                     break;
             }
         }
+    }
+    
+    public function Save()
+    {
+        $root = new \SimpleXMLElement("<configuration></configuration>");
+
+        $collection = $root->addChild("properties");
+
+        $dataContextType = $collection->addChild("property");
+        $dataContextType->addAttribute("name", "DataContextType");
+        $dataContextType->addAttribute("displayName", "Enter the fully qualifed type of the API key data content - rememebr the namespace starting with '\'");
+        $dataContextType->addAttribute("type", "string");
+        $dataContextType->addAttribute("value", $this->DataContextType);
+
+		$dataContextDirectory = $collection->addChild('property');
+		$dataContextDirectory->addAttribute('name', 'DataContextPath');
+		$dataContextDirectory->addAttribute('displayName', 'Enter the fully path relative to the modules directory where the APIKey Data Content Files are contained');
+		$dataContextDirectory->addAttribute('type', "string");
+		$dataContextDirectory->addAttribute("value", $this->DataContextDirectory);
+
+		$root->asXML($this->ConfigurationFilePath);
     }
 }
 ?>

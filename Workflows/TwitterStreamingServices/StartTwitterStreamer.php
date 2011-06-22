@@ -4,6 +4,8 @@ class StartTwitterStreamer extends TwitterStreamingServicesBase
 {
     public function RunWorkflow($json, $key)
     {
+        parent::RegisterKey($key);
+    	
         $logger = \Swiftriver\Core\Setup::GetLogger();
         $logger->log("Core::ServiceAPI::TwitterStreamingServices::StartTwitterStreamer::RunWorkflow [Method invoked]", \PEAR_LOG_INFO);
 
@@ -21,7 +23,7 @@ class StartTwitterStreamer extends TwitterStreamingServicesBase
         $channelRepository = new \Swiftriver\Core\DAL\Repositories\ChannelRepository();
         $channelRepository->SaveChannels(array($channel));
 
-        $filename = \Swiftriver\Core\Setup::Configuration()->CachingDirectory . "/TwitterStreamingController.tmp";
+        $filename = \Swiftriver\Core\Setup::CachingDirectory() . "/TwitterStreamingController.tmp";
 
         $fp = \fopen($filename, "w");
         $done = false;

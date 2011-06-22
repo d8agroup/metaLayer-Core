@@ -16,18 +16,6 @@ class CoreConfigurationHandler extends BaseConfigurationHandler
     public $Name;
 
     /**
-     * The fully qualified path to the modules directory
-     * @var string
-     */
-    public $ModulesDirectory;
-
-    /**
-     * The fully qualified path of the cashing directory
-     * @var string
-     */
-    public $CachingDirectory;
-
-    /**
      * The base language code
      * @link http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
      * @var ISO639-1_Language_Code
@@ -35,11 +23,13 @@ class CoreConfigurationHandler extends BaseConfigurationHandler
     public $BaseLanguageCode;
 
     /**
-     * Boolean that enables or disables debug logging
-     * @var bool
+     * The level of mask to ba added to the log filter
+     * anythign under this level will not be logged
+     * 
+     * @var string
      */
-    public $EnableDebugLogging = false;
-
+    public $LogLevelMask = 'error';
+    
     /**
      * Where a proxy server is required, it can be stored in
      * this variable.
@@ -83,12 +73,6 @@ class CoreConfigurationHandler extends BaseConfigurationHandler
             //swiftch on the name of the property
             switch((string) $property["name"])
             {
-                case "ModulesDirectory" :
-                    $this->ModulesDirectory = dirname(__FILE__)."/../..".$property["value"];
-                    break;
-                case "CachingDirectory" :
-                    $this->CachingDirectory = dirname(__FILE__)."/../..".$property["value"];
-                    break;
                 case "BaseLanguageCode" :
                     $this->BaseLanguageCode = (string) $property["value"];
                     break;
@@ -101,9 +85,8 @@ class CoreConfigurationHandler extends BaseConfigurationHandler
                 case "ProxyServerPassword" :
                     $this->ProxyServerPassword = (string) $property["value"];
                     break;
-                case "EnableDebugLogging" :
-                    $value = (string) $property["value"];
-                    $this->EnableDebugLogging = $value === "true";
+                case "LogLevelMask" :
+                    $this->LogLevelMask = (string) $property['value'];
                     break;
             }
         }
@@ -115,30 +98,18 @@ class CoreConfigurationHandler extends BaseConfigurationHandler
 
         $collection = $root->addChild("properties");
 
-        $modulesDirectoryElement = $collection->addChild("property");
-        $modulesDirectoryElement->addAttribute("name", "ModulesDirectory");
-        $modulesDirectoryElement->addAttribute("displayName", "Enter the path to the modules directory relative to the base directory of the Core");
-        $modulesDirectoryElement->addAttribute("type", "string");
-        $modulesDirectoryElement->addAttribute("value", \str_replace(dirname(__FILE__)."/../..", "", $this->ModulesDirectory));
-
-        $cachingDirectoryElement = $collection->addChild("property");
-        $cachingDirectoryElement->addAttribute("name", "CachingDirectory");
-        $cachingDirectoryElement->addAttribute("displayName", "Enter the path to the cache directory relative to the base directory of the Core");
-        $cachingDirectoryElement->addAttribute("type", "string");
-        $cachingDirectoryElement->addAttribute("value", \str_replace(dirname(__FILE__)."/../..", "", $this->CachingDirectory));
-
         $baseLanguageElement = $collection->addChild("property");
         $baseLanguageElement->addAttribute("name", "BaseLanguageCode");
         $baseLanguageElement->addAttribute("displayName", "Enter the two letter ISO 639-1 language code used as the base reference for all other languages");
         $baseLanguageElement->addAttribute("type", "string");
         $baseLanguageElement->addAttribute("value", $this->BaseLanguageCode);
 
-        $debugLoggingElement = $collection->addChild("property");
-        $debugLoggingElement->addAttribute("name", "EnableDebugLogging");
-        $debugLoggingElement->addAttribute("displayName", "Set this to true if you want to enable debug level logging. Note that this can cause the log file to get BIG!");
-        $debugLoggingElement->addAttribute("type", "string");
-        $debugLoggingElement->addAttribute("value", $this->EnableDebugLogging ? "true" : "false");
-
+		$logLevelMaskElement = $collection->addChild('property');
+		$logLevelMaskElement->addAttribute('name', 'LogLevelMask');
+		$logLevelMaskElement->addAttribute('displayName', 'Set this to error to hide all but error message in the log file');
+		$logLevelMaskElement->addAttribute('type', "string");
+		$logLevelMaskElement->addAttribute("value", $this->LogLevelMask);
+        
         if($this->ProxyServer != "" && $this->ProxyServer != null)
         {
             $proxyServerElement = $collection->addChild("property");

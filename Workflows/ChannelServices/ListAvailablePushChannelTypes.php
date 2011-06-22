@@ -16,6 +16,8 @@ class ListAvailablePushChannelTypes extends ChannelServicesBase
      */
     public function RunWorkflow($key)
     {
+        parent::RegisterKey($key);
+    	
         $logger = \Swiftriver\Core\Setup::GetLogger();
         $logger->log("Core::ServiceAPI::ChannelProcessingJobs::ListAvailablePushChannelTypes::RunWorkflow [Method invoked]", \PEAR_LOG_INFO);
         

@@ -14,6 +14,8 @@ class GetSource extends SourceServicesBase
      */
     public function RunWorkflow($json, $key)
     {
+        parent::RegisterKey($key);
+    	
         //Setup the logger
         $logger = \Swiftriver\Core\Setup::GetLogger();
 

@@ -7,6 +7,8 @@ class ListAllEventHandlers extends EventHandlersBase
 {
     public function RunWorkflow($key)
     {
+        parent::RegisterKey($key);
+    	
         $logger = \Swiftriver\Core\Setup::GetLogger();
 
         $logger->log("Core::Workflows::EventHandlers::ListAllEventHandlers::RunWorkflow [Method invoked]", \PEAR_LOG_INFO);

@@ -9,7 +9,7 @@ class RedBeanController {
             return self::$toolbox;
 
         //else set up the RedBean toolbox
-        require_once( \Swiftriver\Core\Setup::Configuration()->ModulesDirectory."/RedBean/redbean.inc.php" );
+        require_once( \Swiftriver\Core\Setup::ModulesDirectory()."/RedBean/redbean.inc.php" );
 
         //get the url of the url of the db server
         $url = (string) Setup::$Configuration->DataBaseUrl;

@@ -16,6 +16,8 @@ class RunAnalyticsQuery extends AnalyticsWorkflowBase
      */
     public function RunQuery($json, $key)
     {
+    	parent::RegisterKey($key);
+    	
         $logger = \Swiftriver\Core\Setup::GetLogger();
 
         $logger->log("Core::Workflows::Analaytics::RunAnalyticsQuery::RunQuery [Method invoked]", \PEAR_LOG_INFO);

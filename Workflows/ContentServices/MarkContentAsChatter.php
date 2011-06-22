@@ -7,6 +7,8 @@ class MarkContentAsChatter extends ContentServicesBase
 {
     public function RunWorkflow($json, $key)
     {
+        parent::RegisterKey($key);
+    	
         //Setup the logger
         $logger = \Swiftriver\Core\Setup::GetLogger();
         $logger->log("Core::ServiceAPI::ContentServices::MarkContentAsChatter::RunWorkflow [Method invoked]", \PEAR_LOG_INFO);

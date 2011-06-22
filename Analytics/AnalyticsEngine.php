@@ -28,7 +28,7 @@ class AnalyticsEngine
         $logger->log("Core::Analytics::AnalyticsEngine::__construct [Method invoked]", \PEAR_LOG_DEBUG);
 
         if($modulesDirectory == null)
-            $modulesDirectory = \Swiftriver\Core\Setup::Configuration()->ModulesDirectory;
+            $modulesDirectory = \Swiftriver\Core\Setup::ModulesDirectory();
 
         $modulesDirectory = \rtrim($modulesDirectory, "/") . "/";
 

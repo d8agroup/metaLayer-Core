@@ -1,7 +1,7 @@
 <?php
 include_once(dirname(__FILE__) . "/../../Setup.php");
 include_once(dirname(__FILE__) . "/TwitterStreamingSearchClient.php");
-$filename = \Swiftriver\Core\Setup::Configuration()->CachingDirectory . "/TwitterStreamingController.tmp";
+$filename = \Swiftriver\Core\Setup::CachingDirectory() . "/TwitterStreamingController.tmp";
 $fp = fopen($filename, "r+");
 $line = fread($fp, filesize($filename));
 fclose($fp);

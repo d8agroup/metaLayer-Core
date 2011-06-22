@@ -39,7 +39,7 @@ class PreProcessor
 
         $logger->log("Core::PreProcessing::PreProcessor::PreProcessContent [Method invoked]", \PEAR_LOG_DEBUG);
 
-        $modulesDirectory = \Swiftriver\Core\Setup::Configuration()->ModulesDirectory;
+        $modulesDirectory = \Swiftriver\Core\Setup::ModulesDirectory();
 
         $configuration = \Swiftriver\Core\Setup::Configuration();
 
@@ -121,7 +121,7 @@ class PreProcessor
         $steps = array();
 
         //Get the path of the modules directory
-        $modulesDirectory = \Swiftriver\Core\Setup::Configuration()->ModulesDirectory;
+        $modulesDirectory = \Swiftriver\Core\Setup::ModulesDirectory();
 
         //Create a recursive directory ittorator
         $dirItterator = new \RecursiveDirectoryIterator($modulesDirectory);

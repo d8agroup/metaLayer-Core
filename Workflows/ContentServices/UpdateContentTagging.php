@@ -7,6 +7,8 @@ class UpdateContentTagging extends ContentServicesBase
 {
     public function RunWorkflow($json, $key)
     {
+        parent::RegisterKey($key);
+    	
         $logger = \Swiftriver\Core\Setup::GetLogger();
 
         $logger->log("Core::ServiceAPI::ContentServices::UpdateContentTagging::RunWorkflow [Method invoked]", \PEAR_LOG_INFO);

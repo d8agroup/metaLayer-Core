@@ -7,7 +7,7 @@ include_once(dirname(__FILE__)."/../../Setup.php");
 $workflow = new \Swiftriver\Core\Workflows\ChannelServices\PushToChannel();
 
 //If all the key is ok, then run the workflow
-$json = json_decode($workflow->RunWorkflow("swiftriver_dev"));
+$json = json_decode($workflow->RunWorkflow("swiftriver"));
 
 if($json->message == "OK") {
     // Success
