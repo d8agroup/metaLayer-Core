@@ -94,6 +94,7 @@ class Setup
     		foreach($files as $source => $destination)
     		{
     			copy($source, $destination);
+    			chmod($destination, 0777);
     			/*
     			$content = file_get_contents($source);
     			$handle = fopen($destination, "w");

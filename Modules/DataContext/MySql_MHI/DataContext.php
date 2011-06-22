@@ -65,18 +65,18 @@ class DataContext implements
 
             $result = $statement->execute(array(":key" => $key));
 
-            if($result === false)
+            if($result === false || $result == null)
             	throw new \PDOException("Somthing went worg in the execution of the sql: " . $sql);
             
             $logger->log("Core::Modules::DataContext::MySQL_MHI::DataContext::IsRegisterdCoreAPIKey [END: Executing PDO statement]", \PEAR_LOG_DEBUG);
             
-            $found = $result->fetchColumn();
+            $count = $statement->fetchColumn();
             
             $logger->log("Core::Modules::DataContext::MySQL_MHI::DataContext::IsRegisterdCoreAPIKey [Method Finsihed]", \PEAR_LOG_DEBUG);
             
-            return $found == 1;
+            return $count == 1;
         }
-        catch (\PDOException $e)
+        catch (\Exception $e)
         {
         	$logger->log("Core::Modules::DataContext::MySQL_MHI::DataContext::IsRegisterdCoreAPIKey [Exception thrown by the PDO framework, if this is the first API key for this instance then dont worry.]", \PEAR_LOG_ERR);
         	
@@ -191,7 +191,7 @@ class DataContext implements
 
         $logger->log("Core::Modules::DataContext::MySQL_MHI::DataContext::GetChannelsById [START: Building queries]", \PEAR_LOG_DEBUG);
 
-        $sql = "CALL SC_GetChannelByChannelIds ( :ids )";
+        $sql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_GetChannelByChannelIds ( :ids )";
 
         $idsArray = "(";
 
@@ -287,7 +287,7 @@ class DataContext implements
             return;
         }
 
-        $sql = "CALL SC_SaveChannel ( :id, :type, :subType, :active, :inProcess, :nextRun, :json)";
+        $sql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_SaveChannel ( :id, :type, :subType, :active, :inProcess, :nextRun, :json)";
 
         try
         {
@@ -369,7 +369,7 @@ class DataContext implements
             return;
         }
 
-        $sql = "CALL SC_DeleteChannel ( :id )";
+        $sql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_DeleteChannel ( :id )";
 
         try
         {
@@ -444,7 +444,7 @@ class DataContext implements
             $time = time();
         }
 
-        $sql = "CALL SC_SelectNextDueChannel ( :time )";
+        $sql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_SelectNextDueChannel ( :time )";
 
         try
         {
@@ -529,7 +529,7 @@ class DataContext implements
 
         $channels = array();
 
-        $sql = "CALL SC_ListAllChannels()";
+        $sql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_ListAllChannels()";
 
         try
         {
@@ -618,13 +618,13 @@ class DataContext implements
             return;
         }
 
-        $saveContentSql = "CALL SC_SaveContent ( :id, :sourceId, :state, :date, :json )";
+        $saveContentSql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_SaveContent ( :id, :sourceId, :state, :date, :json )";
 
-        $saveSourceSql = "CALL SC_SaveSource ( :id, :channelId, :date, :score, :name, :type, :subType, :json )";
+        $saveSourceSql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_SaveSource ( :id, :channelId, :date, :score, :name, :type, :subType, :json )";
 
-        $saveTagSql = "CALL SC_AddTag ( :contentId, :tagId, :tagType, :tagText )";
+        $saveTagSql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_AddTag ( :contentId, :tagId, :tagType, :tagText )";
 
-        $removeTagsSql = "CALL SC_RemoveAllTags ( :id )";
+        $removeTagsSql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_RemoveAllTags ( :id )";
 
         try
         {
@@ -779,7 +779,7 @@ class DataContext implements
 
         $logger->log("Core::Modules::DataContext::MySQL_MHI::DataContext::GetContent [START: Building SQL Statment]", \PEAR_LOG_DEBUG);
 
-        $getContentSql = "CALL SC_GetContent( :ids )";
+        $getContentSql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_GetContent( :ids )";
 
         $idsArray = "(";
 
@@ -788,7 +788,7 @@ class DataContext implements
 
         $idsArray = \rtrim($idsArray, ",") . ")";
 
-        $getTagsSql = "CALL SC_SelectTags ( :id )";
+        $getTagsSql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_SelectTags ( :id )";
 
         $logger->log("Core::Modules::DataContext::MySQL_MHI::DataContext::GetContent [END: Building SQL Statment]", \PEAR_LOG_DEBUG);
 
@@ -905,11 +905,11 @@ class DataContext implements
 
         $logger->log("Core::Modules::DataContext::MySql_MHI::DataContext::GetContentList [Method invoked]", \PEAR_LOG_DEBUG);
 
-        $baseSql = "from SC_Content content left join SC_Sources source on content.sourceId = source.id";
+        $baseSql = "from " . \Swiftriver\Core\Setup::$requestKey . "_Content content left join " . \Swiftriver\Core\Setup::$requestKey . "_Sources source on content.sourceId = source.id";
 
         $filters = array();
 
-        $time = (\key_exists("time", $parameters)) ? $parameters["time"] : \time();
+        $time = (\key_exists("time", $parameters) && $parameters['time'] != null) ? $parameters["time"] : \time();
         $filters[] = "content.date < $time";
 
         $state = (key_exists("state", $parameters)) ? $parameters["state"] : null;
@@ -943,7 +943,7 @@ class DataContext implements
         $tags = (\key_exists("tags", $parameters)) ? $parameters["tags"] : null;
         if($tags != null && \is_array($tags))
             foreach($tags as $tag)
-                $filters[] = "content.id in (select ct.contentId from SC_Content_Tags ct join SC_Tags t on ct.tagId = t.id where t.text = '$tag')";
+                $filters[] = "content.id in (select ct.contentId from " . \Swiftriver\Core\Setup::$requestKey . "_Content_Tags ct join " . \Swiftriver\Core\Setup::$requestKey . "_Tags t on ct.tagId = t.id where t.text = '$tag')";
 
         $pageSize = (key_exists("pageSize", $parameters)) ? $parameters["pageSize"] : null;
 
@@ -991,7 +991,7 @@ class DataContext implements
 
 
 
-            $tagsSql = "SELECT t.text as name, t.text as id, count(t.text) as count FROM SC_Tags t join SC_Content_Tags ct ON t.id = ct.tagId WHERE ct.contentId in (SELECT content.id " . $sql . ") GROUP BY t.text ORDER BY count DESC";
+            $tagsSql = "SELECT t.text as name, t.text as id, count(t.text) as count FROM " . \Swiftriver\Core\Setup::$requestKey . "_Tags t join " . \Swiftriver\Core\Setup::$requestKey . "_Content_Tags ct ON t.id = ct.tagId WHERE ct.contentId in (SELECT content.id " . $sql . ") GROUP BY t.text ORDER BY count DESC";
             $tagsStatement = $db->prepare($tagsSql);
             $tagsStatement->execute();
             $results = $tagsStatement->fetchAll(\PDO::FETCH_ASSOC);
@@ -1088,7 +1088,7 @@ class DataContext implements
             return;
         }
 
-        $deleteContentSql = "CALL SC_DeleteContent( :id )";
+        $deleteContentSql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_DeleteContent( :id )";
 
         try
         {
@@ -1160,7 +1160,7 @@ class DataContext implements
             return $sources;
         }
 
-        $getSourceSql = "CALL SC_GetSource( :id )";
+        $getSourceSql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_GetSource( :id )";
 
         try
         {
@@ -1239,7 +1239,7 @@ class DataContext implements
 
         $sources = array();
 
-        $selectAllSourcesSql = "CALL SC_SelectAllSources ()";
+        $selectAllSourcesSql = "CALL " . \Swiftriver\Core\Setup::$requestKey . "_SelectAllSources ()";
 
         try
         {
