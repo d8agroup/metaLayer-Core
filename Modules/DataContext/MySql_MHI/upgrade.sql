@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS ApiKeys (
 
 -- Create the Channel table
 CREATE TABLE IF NOT EXISTS {api_key}_Channels (
-    id VARCHAR( 48 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-    type VARCHAR( 48 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    id VARCHAR( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    type VARCHAR( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     subType VARCHAR( 256 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     active BIT( 1 ) NOT NULL ,
     inProcess BIT( 1 ) NOT NULL ,
@@ -28,22 +28,22 @@ CREATE TABLE IF NOT EXISTS {api_key}_Channels (
 
 -- Create the Sources Table
 CREATE TABLE IF NOT EXISTS {api_key}_Sources (
-    id VARCHAR( 48 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-    channelId VARCHAR( 48 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    id VARCHAR( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    channelId VARCHAR( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     date INT NOT NULL ,
     score INT NULL ,
     name VARCHAR( 256 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-    type  VARCHAR( 48 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-    subType VARCHAR( 48 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    type  VARCHAR( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    subType VARCHAR( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     json TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     PRIMARY KEY ( id )
 ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 -- Create the Content Table
 CREATE TABLE IF NOT EXISTS {api_key}_Content (
-    id VARCHAR (48) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-    sourceId VARCHAR( 48 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-    state VARCHAR (48) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    id VARCHAR ( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    sourceId VARCHAR( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    state VARCHAR ( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     date INT NOT NULL ,
     json TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     PRIMARY KEY ( id )
@@ -51,16 +51,16 @@ CREATE TABLE IF NOT EXISTS {api_key}_Content (
 
 -- Create the Tags Table
 CREATE TABLE IF NOT EXISTS {api_key}_Tags (
-    id VARCHAR ( 48 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-    type VARCHAR ( 48 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    id VARCHAR ( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    type VARCHAR ( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     text VARCHAR ( 256 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     PRIMARY KEY ( id )
 ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 -- Create the Cotent_Tags
 CREATE TABLE IF NOT EXISTS {api_key}_Content_Tags (
-    contentId VARCHAR (48) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-    tagId VARCHAR (48) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    contentId VARCHAR ( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    tagId VARCHAR ( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     PRIMARY KEY ( contentId, tagId )
 ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
@@ -85,7 +85,7 @@ CREATE PROCEDURE AddApiKey ( IN apiKeyIn VARCHAR ( 256 ) )
 
 -- Create the GetChannelByChannelId stored procedure
 DROP PROCEDURE IF EXISTS {api_key}_GetChannelByChannelIds;
-CREATE PROCEDURE {api_key}_GetChannelByChannelIds (IN channelIdsAsInArray VARCHAR(48))
+CREATE PROCEDURE {api_key}_GetChannelByChannelIds (IN channelIdsAsInArray VARCHAR( 72 ))
     BEGIN
         DECLARE text VARCHAR (256);
         SET text = CONCAT('SELECT json, active, inProcess FROM {api_key}_Channels WHERE id in ', channelIdsAsInArray);
@@ -97,8 +97,8 @@ CREATE PROCEDURE {api_key}_GetChannelByChannelIds (IN channelIdsAsInArray VARCHA
 -- Create the SaveChannel stored procedure
 DROP PROCEDURE IF EXISTS {api_key}_SaveChannel;
 CREATE PROCEDURE {api_key}_SaveChannel (
-        IN channelId VARCHAR( 48 ),
-        IN channelType VARCHAR( 48 ),
+        IN channelId VARCHAR( 72 ),
+        IN channelType VARCHAR( 72 ),
         IN channelSubType VARCHAR( 256 ),
         IN channelActive BIT( 1 ),
         IN channelInProcess BIT( 1 ),
@@ -135,7 +135,7 @@ CREATE PROCEDURE {api_key}_SaveChannel (
 
 -- Create the DeleteChannel stored procedure
 DROP PROCEDURE IF EXISTS {api_key}_DeleteChannel;
-CREATE PROCEDURE {api_key}_DeleteChannel (IN channelId VARCHAR (48))
+CREATE PROCEDURE {api_key}_DeleteChannel (IN channelId VARCHAR ( 72 ))
     BEGIN
         DELETE FROM {api_key}_Channels WHERE id = channelId;
     END;
@@ -178,9 +178,9 @@ CREATE PROCEDURE {api_key}_ListAllChannels ()
 -- Create the SaveContent stored procedure
 DROP PROCEDURE IF EXISTS {api_key}_SaveContent;
 CREATE PROCEDURE {api_key}_SaveContent (
-        contentId VARCHAR ( 48 ),
-        contentSourceId VARCHAR ( 48 ),
-        contentState VARCHAR ( 48 ),
+        contentId VARCHAR ( 72 ),
+        contentSourceId VARCHAR ( 72 ),
+        contentState VARCHAR ( 72 ),
         contentDate INT,
         contentJson TEXT)
     BEGIN
@@ -220,7 +220,7 @@ CREATE PROCEDURE {api_key}_GetContent (contentIdsAsInArray VARCHAR (2560))
 
 -- Create the DeleteContent stored procedure
 DROP PROCEDURE IF EXISTS {api_key}_DeleteContent;
-CREATE PROCEDURE {api_key}_DeleteContent (IN contentIdToDelete VARCHAR (48))
+CREATE PROCEDURE {api_key}_DeleteContent (IN contentIdToDelete VARCHAR ( 72 ))
     BEGIN
         DELETE FROM {api_key}_Content_Tags WHERE contentId = contentIdToDelete;
         DELETE FROM {api_key}_Content WHERE id = contentIdToDelete;
@@ -233,13 +233,13 @@ CREATE PROCEDURE {api_key}_DeleteContent (IN contentIdToDelete VARCHAR (48))
 -- Create the SaveSource Stored procedure
 DROP PROCEDURE IF EXISTS {api_key}_SaveSource;
 CREATE PROCEDURE {api_key}_SaveSource (
-        IN sourceId VARCHAR ( 48 ),
-        IN sourceChannelId VARCHAR ( 48 ),
+        IN sourceId VARCHAR ( 72 ),
+        IN sourceChannelId VARCHAR ( 72 ),
         IN sourceDate INT,
         IN sourceScore INT,
         IN sourceName VARCHAR ( 256 ),
-        IN sourceType VARCHAR ( 48 ),
-        IN sourceSubType VARCHAR ( 48 ),
+        IN sourceType VARCHAR ( 72 ),
+        IN sourceSubType VARCHAR ( 72 ),
         IN sourceJson TEXT)
     BEGIN
         DECLARE count INT DEFAULT 0;
@@ -279,9 +279,9 @@ CREATE PROCEDURE {api_key}_SaveSource (
 -- Create the AddTag stored procedure
 DROP PROCEDURE IF EXISTS {api_key}_AddTag;
 CREATE PROCEDURE {api_key}_AddTag (
-        IN tagContentId VARCHAR ( 48 ),
-        IN tagTagId VARCHAR ( 48 ),
-        IN tagTagType VARCHAR ( 48 ),
+        IN tagContentId VARCHAR ( 72 ),
+        IN tagTagId VARCHAR ( 72 ),
+        IN tagTagType VARCHAR ( 72 ),
         IN tagTagText VARCHAR ( 256 ))
     BEGIN
         DECLARE count INT DEFAULT 0;
@@ -306,7 +306,7 @@ CREATE PROCEDURE {api_key}_AddTag (
 
 -- Create GetTags Stored Procedure
 DROP PROCEDURE IF EXISTS {api_key}_SelectTags;
-CREATE PROCEDURE {api_key}_SelectTags ( IN contentTagId VARCHAR ( 48 ) )
+CREATE PROCEDURE {api_key}_SelectTags ( IN contentTagId VARCHAR ( 72 ) )
     BEGIN
         SELECT
             t.type, t.text
@@ -319,7 +319,7 @@ CREATE PROCEDURE {api_key}_SelectTags ( IN contentTagId VARCHAR ( 48 ) )
 
 -- Create the Remove All Tags Procedure
 DROP PROCEDURE IF EXISTS {api_key}_RemoveAllTags;
-CREATE PROCEDURE {api_key}_RemoveAllTags ( IN contentTagId VARCHAR ( 48 ) )
+CREATE PROCEDURE {api_key}_RemoveAllTags ( IN contentTagId VARCHAR ( 72 ) )
     BEGIN
         DELETE FROM
             {api_key}_Content_Tags
@@ -329,7 +329,7 @@ CREATE PROCEDURE {api_key}_RemoveAllTags ( IN contentTagId VARCHAR ( 48 ) )
 
 -- Create the Select Source stored procedure
 DROP PROCEDURE IF EXISTS {api_key}_GetSource;
-CREATE PROCEDURE {api_key}_GetSource ( IN sourceId VARCHAR ( 48 ) )
+CREATE PROCEDURE {api_key}_GetSource ( IN sourceId VARCHAR ( 72 ) )
     BEGIN
         SELECT
             json
