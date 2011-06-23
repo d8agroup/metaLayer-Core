@@ -136,6 +136,9 @@ class DataContext implements
 
             $result = $statement->execute(array(":key" => $key));
             
+            if($result === false)
+            	throw new PDOException("there was an error running the sql: $sql");
+            
             $logger->log("Core::Modules::DataContext::MySQL_MHI::DataContext::AddRegisteredCoreAPIKey [END: Executing PDO statement]", \PEAR_LOG_DEBUG);
             
         	$logger->log("Core::Modules::DataContext::MySQL_MHI::DataContext::AddRegisteredCoreAPIKey [Method Finsihed]", \PEAR_LOG_DEBUG);
