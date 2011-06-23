@@ -10,7 +10,7 @@ class ContentServicesBase extends \Swiftriver\Core\Workflows\WorkflowBase
         $rawParams = json_decode($json);
 
         $properties = array (
-            "state", "minVeracity", "maxVeracity", "type", "subType",
+            "state", "minVeracity", "maxVeracity", "type", "subType", "id",
             "source", "pageSize", "pageStart", "orderBy", "tags", "time",
         );
 

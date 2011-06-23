@@ -912,6 +912,10 @@ class DataContext implements
         $time = (\key_exists("time", $parameters) && $parameters['time'] != null) ? $parameters["time"] : \time();
         $filters[] = "content.date < $time";
 
+        $id = (key_exists("id", $parameters)) ? $parameters['id'] : null;
+        if($id != null)
+        	$filters[] = "content.id = '$id'";
+        
         $state = (key_exists("state", $parameters)) ? $parameters["state"] : null;
         if($state != null)
             $filters[] = "content.state = '$state'";
