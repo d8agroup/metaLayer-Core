@@ -9,6 +9,6 @@
 			filePath="/YahooPlacemakerInterface/YahooPlacemakerPreProcessingStep.php" />
 		<step name="Google Language Services"
 			className="\Swiftriver\PreProcessingSteps\GoogleLanguageServicePreProcessingStep"
-			filePath="/GoogleLanguageServiceInterface/GoogleLanguageServicePreProcessingStep.php" />
+			filePath="/GoogleLanguageServiceInterface/GoogleLanguageServicePreProcessingStep.php" />			
 	</preProcessingSteps>
 </configuration>

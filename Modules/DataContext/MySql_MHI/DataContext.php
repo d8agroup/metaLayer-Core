@@ -96,13 +96,15 @@ class DataContext implements
      * @param string $key
      * @return bool
      */
-    public static function AddRegisteredCoreAPIKey($key)
+    public static function AddRegisteredCoreAPIKey($key, $apptemplate = null)
     {
 		$logger = \Swiftriver\Core\Setup::GetLogger();
 
         $logger->log("Core::Modules::DataContext::MySQL_MHI::DataContext::AddRegisteredCoreAPIKey [Method Invoked]", \PEAR_LOG_DEBUG);
         
-        $sql = "CALL AddApiKey( :key )";
+        $sql = ($apptemplate == null) 
+        	? "CALL AddApiKey( :key )"
+        	: "CALL AddApiKeyWithAppTemplate( :key, :apptemplate )";
         
         try
         {
@@ -134,7 +136,9 @@ class DataContext implements
 
             $logger->log("Core::Modules::DataContext::MySQL_MHI::DataContext::AddRegisteredCoreAPIKey [START: Executing PDO statement]", \PEAR_LOG_DEBUG);
 
-            $result = $statement->execute(array(":key" => $key));
+            $result = ($apptemplate == null)
+            	? $statement->execute(array(":key" => $key))
+            	: $statement->execute(array(":key" => $key, ":apptemplate" => $apptemplate));
             
             if($result === false)
             	throw new PDOException("there was an error running the sql: $sql");

@@ -95,13 +95,6 @@ class Setup
     		{
     			copy($source, $destination);
     			chmod($destination, 0777);
-    			/*
-    			$content = file_get_contents($source);
-    			$handle = fopen($destination, "w");
-    			fwrite($handle, $content);
-    			fclose($handle);
-    			chmod($destination, 0777);
-    			*/
     		}
     	}
     	
@@ -122,7 +115,7 @@ class Setup
     	//Use the repository to check for and if required to create the data context for this apikey
     	$repository = new Repositories\APIKeyRepository();
     	if(!$repository->IsRegisterdCoreAPIKey($apiKey))
-    		$repository->AddRegisteredAPIKey($apiKey);
+    		$repository->AddRegisteredAPIKey($apiKey, $appTemplate);
     }
     
 

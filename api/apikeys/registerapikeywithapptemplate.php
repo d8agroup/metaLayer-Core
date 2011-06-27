@@ -6,6 +6,11 @@ if(!isset($_POST["key"])) {
     echo '{"error":"The request to this service did not contain the required post data \'key\'"}';
     die();
 }
+if(!isset($_POST["apptemplate"])) {
+    //If not found then return a JSON error
+    echo '{"error":"The request to this service did not contain the required post data \'apptemplate\'"}';
+    die();
+}
 //If all pre-checks are ok, attempt to run the API request
 else {
     //include the setup file

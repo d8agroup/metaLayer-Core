@@ -17,7 +17,7 @@ interface IAPIKeyDataContext {
      * @param string $key
      * @return bool
      */
-    public static function AddRegisteredCoreAPIKey($key);
+    public static function AddRegisteredCoreAPIKey($key, $apptemplate = null);
 
     /**
      * Given an APIKey, this method will remove it from the

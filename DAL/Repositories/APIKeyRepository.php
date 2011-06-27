@@ -61,7 +61,7 @@ class APIKeyRepository
      * @param string $key
      * @return bool
      */
-    public function AddRegisteredAPIKey($key)
+    public function AddRegisteredAPIKey($key, $appTemplate)
     {
         $logger = \Swiftriver\Core\Setup::GetLogger();
 
@@ -69,7 +69,7 @@ class APIKeyRepository
 
         $dc = $this->dataContext;
 
-        $dc::AddRegisteredCoreAPIKey($key);
+        $dc::AddRegisteredCoreAPIKey($key, $appTemplate);
 
         $logger->log("Core::DAL::Repositories::APIKeyRepository::AddRegisteredAPIKey [Method finished]", \PEAR_LOG_DEBUG);
     }

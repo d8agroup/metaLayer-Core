@@ -11,7 +11,8 @@ DROP TABLE IF EXISTS {api_key}_Content_Tags;
 
 -- create the apikesy table
 CREATE TABLE IF NOT EXISTS ApiKeys (
-    apiKey VARCHAR ( 256 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+    apiKey VARCHAR ( 256 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+    appTemplate VARCHAR ( 256 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL
 ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 -- Create the Channel table
@@ -76,7 +77,13 @@ CREATE PROCEDURE ApiKeyExists ( IN apiKeyIn VARCHAR ( 256 ) )
 DROP PROCEDURE IF EXISTS AddApiKey;
 CREATE PROCEDURE AddApiKey ( IN apiKeyIn VARCHAR ( 256 ) )
     BEGIN
-        INSERT INTO ApiKeys VALUES ( apiKeyIn );
+        INSERT INTO ApiKeys VALUES ( apiKeyIn, NULL );
+    END;
+
+DROP PROCEDURE IF EXISTS AddApiKeyWithAppTemplate;
+CREATE PROCEDURE AddApiKeyWithAppTemplate ( IN apiKeyIn VARCHAR ( 256 ), IN appTemplateIn VARCHAR( 256 ) )
+    BEGIN
+        INSERT INTO ApiKeys VALUES ( apiKeyIn, appTemplateIn );
     END;
 
 -- *****************************************************************************

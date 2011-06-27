@@ -6,3 +6,4 @@
 *_*.xml
 .pydevproject
 fabfile*
+_Tests*
