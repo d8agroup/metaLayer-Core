@@ -1,5 +1,5 @@
 <?php
-namespace Swiftriver\PreProcessing;
+namespace Swiftriver\PreProcessingSteps;
 use Swiftriver\Core\Modules\SiSPS\Parsers;
 use Swiftriver\Core\ObjectModel;
 
