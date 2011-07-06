@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS {api_key}_Content (
     sourceId VARCHAR( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     state VARCHAR ( 72 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     date INT NOT NULL ,
-    json TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+    json LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
     PRIMARY KEY ( id )
 ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 

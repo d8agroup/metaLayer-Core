@@ -42,15 +42,41 @@ class MetaLensGoogleProductsSearchFromTagsPreProcessingStep implements \Swiftriv
     				//Decode the json returned from the service
     				$objects = json_decode($json);
     				
+    				foreach($objects->items as $jsonItem)
+    				{
+    					$product = $jsonItem->product;
+    					
+    					$title = $product->title;
+    					
+    					$link = $product->link;
+    					
+    					$price = $product->inventories[0]->price;
+    					
+    					$image = $product->images[0]->link;
+    					
+    					$googleProducts[] = array
+    					(
+    						'title' => $title,
+    						'price' => $price,
+    						'link' => $link,
+    						'image' => $image
+    					);
+    				}
+    				
+    				
+    				/*
     				//If there are objects in the return array
     				if(is_array($objects->items))
     				{
-    					//Loop through them
-    					foreach($objects->items as $product)
+    					//TODO: Here we are limiting the amount of products added
+    					$limit = 3;
+    					
+    					for($x = 0; ($x < $limit && $x < count($objects)); $x++)
     					{
-    						$googleProducts[] = $product;
+    						$googleProducts[] = $objects->items[$x];
     					}
     				}
+    				*/
     			}
     			catch (\Exception $e)
     			{
@@ -76,7 +102,7 @@ class MetaLensGoogleProductsSearchFromTagsPreProcessingStep implements \Swiftriv
      */
     public function Name()
     {
-    	return "MetaLensWikipediaSearchFromTagsPreProcessingStep";	
+    	return "MetaLensGoogleProductsSearchFromTagsPreProcessingStep";	
     }
 
     /**
@@ -86,7 +112,7 @@ class MetaLensGoogleProductsSearchFromTagsPreProcessingStep implements \Swiftriv
      */
     public function Description()
     {
-    	return "Takes the tags of the content items and performs a wikipedia article search for matching articles";
+    	return "Takes the tags of the content items and performs a google products search for matching products";
     }
 
     /**

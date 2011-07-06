@@ -7,6 +7,9 @@
 		<step name="Geo Location (Yahoo)"
 			className="\Swiftriver\PreProcessingSteps\YahooPlacemakerPreProcessingStep"
 			filePath="/YahooPlacemakerInterface/YahooPlacemakerPreProcessingStep.php" />
+		<step name="MetaLens Tag Filtering"
+			className="\Swiftriver\PreProcessingSteps\MetaLensTagFilteringPreProcessingStep"
+			filePath="/MetaLensExtensions/MetaLensTagFilteringPreProcessingStep.php" />
 		<step name="MetaLens Twitter Search"
 			className="\Swiftriver\PreProcessingSteps\MetaLensTwitterSearchFromTagsPreProcessingStep"
 			filePath="/MetaLensExtensions/MetaLensTwitterSearchFromTagsPreProcessingStep.php" />

@@ -843,6 +843,10 @@ class DataContext implements
                     $source = \Swiftriver\Core\ObjectModel\ObjectFactories\SourceFactory::CreateSourceFromJSON($sourcejson);
 
                     $contentjson = $row["contentjson"];
+                    
+                    $f = fopen('/home/matt/Desktop/json', 'w');
+                    fwrite($f, $contentjson);
+                    fclose($f);
 
                     $item = \Swiftriver\Core\ObjectModel\ObjectFactories\ContentFactory::CreateContent($source, $contentjson);
 
