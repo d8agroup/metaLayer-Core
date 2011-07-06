@@ -1,16 +1,15 @@
 <?php
 namespace Swiftriver\PreProcessingSteps;
 use Swiftriver\Core\Modules\SiSW;
-
 use Swiftriver\Core\Modules\SiSPS\Parsers;
 use Swiftriver\Core\ObjectModel;
 
-class MetaLensWikipediaSearchFromTagsPreProcessingStep implements \Swiftriver\Core\PreProcessing\IPreProcessingStep 
+class MetaLensGoogleProductsSearchFromTagsPreProcessingStep implements \Swiftriver\Core\PreProcessing\IPreProcessingStep 
 {
     /**
-     * Takes any tags extracted from the content items and uses these to run a Wikipedia 
-     * Search that adds any article links to the extension array of the content item under the
-     * key 'relatedWikipediaArticles'
+     * Takes any tags extracted from the content items and uses these to run a Google Products 
+     * Search that adds any product links to the extension array of the content item under the
+     * key 'relatedGoogleProducts'
      * 
      * @param \Swiftriver\Core\ObjectModel\Content[] $contentItems
      * @param \Swiftriver\Core\Configuration\ConfigurationHandlers\CoreConfigurationHandler $configuration
@@ -23,7 +22,7 @@ class MetaLensWikipediaSearchFromTagsPreProcessingStep implements \Swiftriver\Co
     	foreach($contentItems as $item)
     	{
     		//Set up the array of wikipedia links
-    		$wikipediaLinks = array();
+    		$googleProducts = array();
     		
     		//Loop through the content tags (this needs to be done one at a time)
     		foreach($item->tags as $tag)
@@ -32,42 +31,24 @@ class MetaLensWikipediaSearchFromTagsPreProcessingStep implements \Swiftriver\Co
     			$tagText = $tag->text;
     			
     			//Construct the wikipedia search url
-    			$wikipediaUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' . $tagText . '&format=json';
+    			$googleProductsUrl = 'https://www.googleapis.com/shopping/search/v1/public/products?key=AIzaSyAeJ3W-LP9x1owHnJifO_nHN-2gwNdqrP8&country=US&q=' . $tagText . '&alt=json';
 
     			try
     			{
     				ini_set( 'user_agent', 'metaLayer' );
     				
-    				$json = file_get_contents($wikipediaUrl);
+    				$json = file_get_contents($googleProductsUrl);
     				
     				//Decode the json returned from the service
     				$objects = json_decode($json);
     				
     				//If there are objects in the return array
-    				if(is_array($objects))
+    				if(is_array($objects->items))
     				{
     					//Loop through them
-    					foreach($objects as $articles)
+    					foreach($objects->items as $product)
     					{
-    						if(is_array($articles))
-    						{
-    							//Loop through them
-    							foreach($articles as $articleName)
-    							{
-    								//Clean the string ready to be added to the article url
-    								$cleanArticleName = str_replace(' ', '_', $articleName);
-    								
-    								//Construct the article url
-    								$wikipediaLink = 'http://en.wikipedia.org/wiki/' . $cleanArticleName;
-    								
-    								//Create a new entry in the wikipediaLinks array
-    								$wikipediaLinks[] = array
-    								(
-    									'name' => $articleName,
-    									'link' => $wikipediaLink
-    								);
-    							}
-    						}
+    						$googleProducts[] = $product;
     					}
     				}
     			}
@@ -79,8 +60,8 @@ class MetaLensWikipediaSearchFromTagsPreProcessingStep implements \Swiftriver\Co
     		}
     		
     		//If we collected wikipedia links then add them to the content item
-    		if(count($wikipediaLinks) > 0)
-    			$item->extensions['relatedWikipediaArticles'] = $wikipediaLinks;
+    		if(count($googleProducts) > 0)
+    			$item->extensions['relatedGoogleProducts'] = $googleProducts;
     	}
     	
     	//return the array of content

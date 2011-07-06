@@ -13,5 +13,8 @@
 		<step name="MetaLens Wikipedia Search"
 			className="\Swiftriver\PreProcessingSteps\MetaLensWikipediaSearchFromTagsPreProcessingStep"
 			filePath="/MetaLensExtensions/MetaLensWikipediaSearchFromTagsPreProcessingStep.php" />
+		<step name="MetaLens Google Products Search"
+			className="\Swiftriver\PreProcessingSteps\MetaLensGoogleProductsSearchFromTagsPreProcessingStep"
+			filePath="/MetaLensExtensions/MetaLensGoogleProductsSearchFromTagsPreProcessingStep.php" />
 	</preProcessingSteps>
 </configuration>
