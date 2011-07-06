@@ -9,6 +9,9 @@
 			filePath="/YahooPlacemakerInterface/YahooPlacemakerPreProcessingStep.php" />
 		<step name="MetaLens Twitter Search"
 			className="\Swiftriver\PreProcessingSteps\MetaLensTwitterSearchFromTagsPreProcessingStep"
-			filePath="/MetaLensTwitterSearchFromTags/MetaLensTwitterSearchFromTagsPreProcessingStep.php" />
+			filePath="/MetaLensExtensions/MetaLensTwitterSearchFromTagsPreProcessingStep.php" />
+		<step name="MetaLens Wikipedia Search"
+			className="\Swiftriver\PreProcessingSteps\MetaLensWikipediaSearchFromTagsPreProcessingStep"
+			filePath="/MetaLensExtensions/MetaLensWikipediaSearchFromTagsPreProcessingStep.php" />
 	</preProcessingSteps>
 </configuration>
