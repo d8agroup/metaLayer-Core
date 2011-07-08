@@ -52,8 +52,10 @@ class MetaLensWikipediaSearchFromTagsPreProcessingStep implements \Swiftriver\Co
     						if(is_array($articles))
     						{
     							//Loop through them
-    							foreach($articles as $articleName)
+							for($x = 0; $x < 10 && $x < count($articles); $x++)
     							{
+								$articleName = $articles[$x];
+								
     								//Clean the string ready to be added to the article url
     								$cleanArticleName = str_replace(' ', '_', $articleName);
     								
@@ -77,10 +79,15 @@ class MetaLensWikipediaSearchFromTagsPreProcessingStep implements \Swiftriver\Co
     				$logger->log('Swiftriver::PreProcessingSteps::MetaLensWikipediaSearchFromTagsPreProcessingStep: ' . $e, \PEAR_LOG_ERR);	
     			}
     		}
+
+		shuffle($wikipediaLinks);
+
+                $item->extensions['relatedWikipediaArticles'] = array();
     		
     		//If we collected wikipedia links then add them to the content item
     		if(count($wikipediaLinks) > 0)
-    			$item->extensions['relatedWikipediaArticles'] = $wikipediaLinks;
+		    for($x=0; $x < 10 && $x < count($wikipediaLinks); $x++)
+    			$item->extensions['relatedWikipediaArticles'][] = $wikipediaLinks[$x];
     	}
     	
     	//return the array of content

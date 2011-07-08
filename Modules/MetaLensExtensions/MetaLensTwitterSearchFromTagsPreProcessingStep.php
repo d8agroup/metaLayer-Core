@@ -50,7 +50,20 @@ class MetaLensTwitterSearchFromTagsPreProcessingStep implements \Swiftriver\Core
 	    	
 	    	//if there are tweets add them to the extension field of the content item
 	    	if(count($tweets) > 0)
-	    		$item->extensions['relatedTweets'] = $tweets;
+	    	{	
+			$item->extensions['relatedTweets'] = array();
+
+			foreach($tweets as $t)
+			{
+				$item->extensions['relatedTweets'][] = array
+				(
+					'text' => $t->text[0]->text[0],
+					'link' => $t->link,
+					'image' => $t->source->applicationProfileImages['twitter'],
+					'userlink' => $t->source->link,
+				);
+			}
+		}
     	}
     	
     	//return the array of content

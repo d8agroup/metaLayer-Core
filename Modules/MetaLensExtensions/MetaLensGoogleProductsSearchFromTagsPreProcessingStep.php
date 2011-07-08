@@ -42,8 +42,10 @@ class MetaLensGoogleProductsSearchFromTagsPreProcessingStep implements \Swiftriv
     				//Decode the json returned from the service
     				$objects = json_decode($json);
     				
-    				foreach($objects->items as $jsonItem)
+    				for($x = 0; $x < 10 && $x < count($objects->items); $x++)
     				{
+					$jsonItem = $objects->items[$x];
+
     					$product = $jsonItem->product;
     					
     					$title = $product->title;
@@ -84,10 +86,15 @@ class MetaLensGoogleProductsSearchFromTagsPreProcessingStep implements \Swiftriv
     				$logger->log('Swiftriver::PreProcessingSteps::MetaLensWikipediaSearchFromTagsPreProcessingStep: ' . $e, \PEAR_LOG_ERR);	
     			}
     		}
+
+		shuffle($googleProducts);
     		
+	        $item->extensions['relatedGoogleProducts'] = array();
+
     		//If we collected wikipedia links then add them to the content item
     		if(count($googleProducts) > 0)
-    			$item->extensions['relatedGoogleProducts'] = $googleProducts;
+		    for($x=0; $x < 10 && $x < count($googleProducts); $x++)
+    			$item->extensions['relatedGoogleProducts'][] = $googleProducts[$x];
     	}
     	
     	//return the array of content
