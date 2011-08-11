@@ -107,6 +107,10 @@ class RunNextChannel extends ChannelServicesBase
 
             return parent::FormatErrorMessage("An exception was thrown: $message");
         }
+        
+        $logger->log("Core::Workflows::ChannelServices::RunNextChannel::RunWorkflow [END: Get content]", \PEAR_LOG_DEBUG);
+        
+        $logger->log("Core::Workflows::ChannelServices::RunNextChannel::RunWorkflow [START: Process content]", \PEAR_LOG_DEBUG);
 
 
         if(isset($rawContent) && is_array($rawContent) && count($rawContent) > 0)
@@ -119,6 +123,8 @@ class RunNextChannel extends ChannelServicesBase
             $logger->log("Core::Workflows::ChannelServices::RunNextChannel::RunWorkflow [END: Get and parse content]", \PEAR_LOG_DEBUG);
             $logger->log("Core::Workflows::ChannelServices::RunNextChannel::RunWorkflow [No content found.]", \PEAR_LOG_DEBUG);
         }
+        
+        $logger->log("Core::Workflows::ChannelServices::RunNextChannel::RunWorkflow [END: Process content]", \PEAR_LOG_DEBUG);
 
         $logger->log("Core::Workflows::ChannelServices::RunNextChannel::RunWorkflow [START: Mark channel processing job as complete]", \PEAR_LOG_DEBUG);
 

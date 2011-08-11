@@ -7,8 +7,6 @@ class ProcessContent extends ContentServicesBase
 {
     public function RunWorkflow($content, $preProcessContent = true)
     {
-        parent::RegisterKey($key);
-    	
         $logger = \Swiftriver\Core\Setup::GetLogger();
 
         $logger->log("Core::Workflows::ContentServices::ProcessContent::RunWorkflow [Method invoked]", \PEAR_LOG_INFO);

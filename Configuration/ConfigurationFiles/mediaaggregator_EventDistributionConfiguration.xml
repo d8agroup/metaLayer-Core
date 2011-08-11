@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<configuration>
+	<eventHandlers>
+		<handler 
+			name="NavantiSolrEventHandler"
+			className="\Swiftriver\EventHandlers\NavantiSolrEventHandler"
+			filePath="/NavantiExtensions/NavantiSolrEventHandler.php" />		
+	</eventHandlers>
+</configuration>

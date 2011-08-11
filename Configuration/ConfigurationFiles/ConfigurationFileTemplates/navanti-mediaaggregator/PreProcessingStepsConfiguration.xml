@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<configuration>
+	<preProcessingSteps>
+		<step name="Auto-Tagging"
+			className="\Swiftriver\PreProcessingSteps\SiLCCPreProcessingStep"
+			filePath="/SiLCCInterface/SiLCCPreProcessingStep.php" />
+		<step name="Geo Location (Yahoo)"
+			className="\Swiftriver\PreProcessingSteps\YahooPlacemakerPreProcessingStep"
+			filePath="/YahooPlacemakerInterface/YahooPlacemakerPreProcessingStep.php" />
+		<step name="MetaLens Tag Filtering"
+			className="\Swiftriver\PreProcessingSteps\MetaLensTagFilteringPreProcessingStep"
+			filePath="/MetaLensExtensions/MetaLensTagFilteringPreProcessingStep.php" />
+		<step name="MetaLens Twitter Search"
+			className="\Swiftriver\PreProcessingSteps\MetaLensTwitterSearchFromTagsPreProcessingStep"
+			filePath="/MetaLensExtensions/MetaLensTwitterSearchFromTagsPreProcessingStep.php" />
+		<step name="MetaLens Wikipedia Search"
+			className="\Swiftriver\PreProcessingSteps\MetaLensWikipediaSearchFromTagsPreProcessingStep"
+			filePath="/MetaLensExtensions/MetaLensWikipediaSearchFromTagsPreProcessingStep.php" />
+		<step name="MetaLens Google Products Search"
+			className="\Swiftriver\PreProcessingSteps\MetaLensGoogleProductsSearchFromTagsPreProcessingStep"
+			filePath="/MetaLensExtensions/MetaLensGoogleProductsSearchFromTagsPreProcessingStep.php" />
+	</preProcessingSteps>
+</configuration>

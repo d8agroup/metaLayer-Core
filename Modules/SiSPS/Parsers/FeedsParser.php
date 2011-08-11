@@ -136,11 +136,11 @@ class FeedsParser implements IParser
     {
         $logger->log("Core::Modules::SiSPS::Parsers::FeedsParser::GetSimplePieContentEntries [START: Including the SimplePie module]", \PEAR_LOG_DEBUG);
         
-        $simplePiePath = $config->ModulesDirectory."/SimplePie/simplepie.inc";
+        $simplePiePath = \Swiftriver\Core\Setup::ModulesDirectory() ."/SimplePie/simplepie.inc";
         include_once($simplePiePath);
 
         //Include the Simple Pie YouTube Framework
-        $simpleTubePiePath = $config->ModulesDirectory."/SimplePie/simpletube.inc";
+        $simpleTubePiePath = \Swiftriver\Core\Setup::ModulesDirectory() . "/SimplePie/simpletube.inc";
         include_once($simpleTubePiePath);
 
         $logger->log("Core::Modules::SiSPS::Parsers::FeedsParser::GetSimplePieContentEntries [END: Including the SimplePie module]", \PEAR_LOG_DEBUG);
@@ -204,6 +204,7 @@ class FeedsParser implements IParser
             $source_name = ($source_name == null || $source_name == "") ? $feedUrl : $source_name . " @ " . $feedUrl;
             $source = \Swiftriver\Core\ObjectModel\ObjectFactories\SourceFactory::CreateSourceFromIdentifier($source_name, $channel->trusted);
             $source->name = $source_name;
+            $source->link = $feedurl;
             $source->email = $feedItem->get_author()->email;
             $source->parent = $channel->id;
             $source->type = $channel->type;
