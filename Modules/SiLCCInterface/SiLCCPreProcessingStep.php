@@ -1,83 +1,151 @@
 <?php
 namespace Swiftriver\PreProcessingSteps;
-include_once (dirname(__FILE__)."/ContentFromJSONParser.php");
-include_once (dirname(__FILE__)."/ServiceInterface.php");
-include_once (dirname(__FILE__)."/TextForUrlParser.php");
+use Swiftriver\Core\ObjectModel;
 
-class SiLCCPreProcessingStep implements \Swiftriver\Core\PreProcessing\IPreProcessingStep {
+class SiLCCPreProcessingStep implements \Swiftriver\Core\PreProcessing\IPreProcessingStep 
+{
+    /**
+     * Interface method that all PrePorcessing Steps must implement
+     * 
+     * @param \Swiftriver\Core\ObjectModel\Content[] $contentItems
+     * @param \Swiftriver\Core\Configuration\ConfigurationHandlers\CoreConfigurationHandler $configuration
+     * @param \Log $logger
+     * @return \Swiftriver\Core\ObjectModel\Content[]
+     */
+    public function Process($contentItems, $configuration, $logger)
+    {
+    	try
+    	{
+    		$logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [Method started]", \PEAR_LOG_DEBUG);
+    		
+    		$logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [START: Collecting Config]", \PEAR_LOG_DEBUG);
+    		
+            $config = \Swiftriver\Core\Setup::DynamicModuleConfiguration()->Configuration;
 
-    public function Description(){
-        return "This plugin sends your content to the Swift Auto-Tagging API." .
-               " It then auto-tags content with the relevant keywords.";
-    }
-    public function Name(){
-        return "Auto-Tagging";
-    }
-    public function Process($contentItems, $configuration, $logger) {
-        $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [Method invoked]", \PEAR_LOG_DEBUG);
+            if(!key_exists($this->Name(), $config)) 
+            {
+                $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [The SiLCC Pre Processing Step was called but no configuration exists for this module]", \PEAR_LOG_ERR);
+                $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [Method finished]", \PEAR_LOG_DEBUG);
+                return $contentItems;
+            }
 
-        //if the content is not valid, jsut return it
-        if(!isset($contentItems) || !is_array($contentItems) || count($contentItems) < 1) {
-            $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [No content supplied]", \PEAR_LOG_DEBUG);
-            $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [Method finished]", \PEAR_LOG_DEBUG);
+            $config = $config[$this->Name()];
+
+            foreach($this->ReturnRequiredParameters() as $requiredParam) 
+            {
+                if(!key_exists($requiredParam->name, $config)) 
+                {
+                    $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [The SiLCC Pre Processing Step was called but all the required configuration properties could not be loaded]", \PEAR_LOG_ERR);
+                    $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [Method finished]", \PEAR_LOG_DEBUG);
+                    return $contentItems;
+                }
+            }
+
+            $apiKey = (string) $config["API Key"]->value;
+
+            $serviceUrl = (string) $config["Service Url"]->value;
+
+            $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [END: Collecting Config]", \PEAR_LOG_DEBUG);
+
+            $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [START: Looping through content]", \PEAR_LOG_DEBUG);
+            
+            foreach($contentItems as $content)
+            {
+	            try
+	            {
+	            	if (count($content->text) == 0)
+	            		continue;
+	            		
+					$text = "";
+					$text .= ($content->text[0]->title != null)
+						? " " . $content->text[0]->title
+						: "";
+					foreach($content->text[0]->text as $t)
+						$text .= ($t != null) ? " " . $t : "";
+
+					$postData = array
+					(
+						"key" => $apiKey,
+						"text" => $text
+					);
+					
+					$service = new \Swiftriver\Core\Modules\SiSW\ServiceWrapper($serviceUrl);
+					
+					$json = $service->MakePOSTRequest($postData, 10000);
+					
+					$logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [JSON: " . $json . "]", \PEAR_LOG_DEBUG);
+					
+					foreach(json_decode($json) as $tag)
+					{
+						$t = new ObjectModel\Tag($tag);
+						$content->tags[] = $t;		
+					}
+	            }
+	            catch(\Exception $e)
+	            {
+		            $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [An exception was thrown]", \PEAR_LOG_ERR);
+		            $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [$e]", \PEAR_LOG_ERR);
+		            return $contentItems;
+	            }
+            }
+            
+            $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [END: Looping through content]", \PEAR_LOG_DEBUG);
+    	}
+    	catch (\Exception $e)
+    	{
+            $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [An exception was thrown]", \PEAR_LOG_ERR);
+            $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [$e]", \PEAR_LOG_ERR);
+            $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [Method finished]", \PEAR_LOG_DEBUG);
             return $contentItems;
         }
-
-        //set up the return array
-        $taggedContentItems = array();
-
-        $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [START: Loop through content]", \PEAR_LOG_DEBUG);
-
-        foreach($contentItems as $item) {
-            $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [START: Parse text for SiLCC]", \PEAR_LOG_DEBUG);
-
-            //construct a new Url parser
-            $urlParser = new \Swiftriver\SiLCCInterface\TextForUrlParser($item);
-
-            //get the url formatted text
-            $text = $urlParser->GetUrlText();
-
-            $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [END: Parse text for SiLCC]", \PEAR_LOG_DEBUG);
-
-            $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [START: Call the SiLCC Service]", \PEAR_LOG_DEBUG);
-
-            try {
-                //construct a new service interface
-                $service = new \Swiftriver\SiLCCInterface\ServiceInterface();
-
-                //call the service through the interface
-                $json = $service->InterafceWithService("http://opensilcc.com/api/tag", $text, $configuration);
-            }
-            catch (\Exception $e) {
-                $message = $e->getMessage();
-                $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [$message]", \PEAR_LOG_ERR);
-                $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [Exception throw while calling the service, moving on to next content item]", \PEAR_LOG_DEBUG);
-                continue;
-            }
-
-            $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [END: Call the SiLCC Service]", \PEAR_LOG_DEBUG);
-
-            $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [START: Parse the results from the service]", \PEAR_LOG_DEBUG);
-
-            //Construct a new result parser
-            $jsonParser = new \Swiftriver\SiLCCInterface\ContentFromJSONParser($item, $json);
-
-            //get back the tagged content from the parser
-            $taggedContent = $jsonParser->GetTaggedContent();
-
-            $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [END: Parse the results from the service]", \PEAR_LOG_DEBUG);
-
-            //Add the content to the return array
-            $taggedContentItems[] = $taggedContent;
-        }
-
-        $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [END: Loop through content]", \PEAR_LOG_DEBUG);
-        $logger->log("PreProcessingSteps::SiLCCPreProcessingStep::Process [Method finished]", \PEAR_LOG_DEBUG);
-
-        return $taggedContentItems;
+        
+        $logger->log("Swiftriver::PreProcessingSteps::SiLCCPreProcessingStep::Process [Method finished]", \PEAR_LOG_DEBUG);
+        
+        return $contentItems;
     }
-    public function ReturnRequiredParameters() {
-        return array();
+
+    /**
+     * The short name for this pre processing step, should be no longer
+     * than 50 chars
+     *
+     * @return string
+     */
+    public function Name()
+    {
+    	return "SiLCC Pre Processing Step";
+    }
+
+    /**
+     * The description of this step
+     *
+     * @return string
+     */
+    public function Description()
+    {
+    	return "V2 of the SiLCC Pre Processing Step";
+    }
+
+    /**
+     * This method returns an array of the required paramters that
+     * are nessesary to run this step.
+     *
+     * @return \Swiftriver\Core\ObjectModel\ConfigurationElement[]
+     */
+    public function ReturnRequiredParameters()
+    {
+    	return array
+    	(
+            new \Swiftriver\Core\ObjectModel\ConfigurationElement(
+                    "Service Url",
+                    "string",
+                    "The Url of the cloud or locally hosted instsnce of the SiLCC service"
+            ),
+            new \Swiftriver\Core\ObjectModel\ConfigurationElement(
+                    "API Key",
+                    "string",
+                    "The api key you will need to communicate with the SiLCC service"
+            ),
+    	);
     }
 }
 ?>

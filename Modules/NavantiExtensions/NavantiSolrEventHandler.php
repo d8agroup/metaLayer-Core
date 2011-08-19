@@ -122,6 +122,13 @@ class NavantiSolrEventHandler implements \Swiftriver\Core\EventDistribution\IEve
         			$c['link'] = $i->link;
         			$c['date'] = gmdate('Y-m-d\TH:i:s\Z', $i->date);
 
+        			if(count($i->tags) > 0)
+        			{
+        				$c['tags'] = array();
+        				foreach($i->tags as $tag)
+        					$c['tags'][] = $tag->text;
+        			}
+        			
         			if(count($i->gisData) > 0)
         			{
         				$c['locations'] = array();
