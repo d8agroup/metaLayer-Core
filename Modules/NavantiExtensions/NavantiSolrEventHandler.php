@@ -131,9 +131,14 @@ class NavantiSolrEventHandler implements \Swiftriver\Core\EventDistribution\IEve
         			
         			if(count($i->gisData) > 0)
         			{
-        				$c['locations'] = array();
-	        			foreach($i->gisData as $g)
-	        				$c['locations'][] = $g->longitude . "," . $g->latitude;
+        				$locations = array();
+        				foreach($i->gisData as $g)
+        					if($g->longitude != 0 || $g->latitude != 0)
+        						$locations[] = $g->longitude . "," . $g->latitude;
+	        			
+        				if (count($locations) > 0)
+	        				$c['locations'] = $locations[0];
+	        			
         			}
         			
         			$c['sid'] = $i->source->id;
@@ -154,13 +159,15 @@ class NavantiSolrEventHandler implements \Swiftriver\Core\EventDistribution\IEve
         					$c['sappimages'][] = $key . "|" . $img;
         			}
         			
+        			/*
         			if(count($i->source->gisData) > 0)
         			{
 	        			$c['slocations'] = array();
 	        			foreach($i->source->gisData as $g)
 	        				$c['slocations'][] = $g->longitude . "," . $g->latitude;
                 	}
-                	
+                	*/
+        			
         			$c['cid'] = $i->source->parent;
         			$c['ctype'] = $i->source->type;
         			$c['csubtype'] = $i->source->subType;
