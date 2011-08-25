@@ -131,14 +131,10 @@ class NavantiSolrEventHandler implements \Swiftriver\Core\EventDistribution\IEve
         			
         			if(count($i->gisData) > 0)
         			{
-        				$locations = array();
+        				$c['rawlocations'] = array();
         				foreach($i->gisData as $g)
         					if($g->longitude != 0 || $g->latitude != 0)
-        						$locations[] = $g->longitude . "," . $g->latitude;
-	        			
-        				if (count($locations) > 0)
-	        				$c['locations'] = $locations[0];
-	        			
+        						$c['rawlocations'][] = $g->latitude . "," . $g->longitude;
         			}
         			
         			$c['sid'] = $i->source->id;
