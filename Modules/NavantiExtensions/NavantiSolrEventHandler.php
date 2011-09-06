@@ -114,7 +114,7 @@ class NavantiSolrEventHandler implements \Swiftriver\Core\EventDistribution\IEve
         		{
         			$c = array();
         			$c['id'] = $i->id;
-        			$c['language'] = 'en';
+        			$c['language'] = $i->text[0]->languageCode;
         			$c['title'] = $i->text[0]->title;
         			$c['text'] = "";
         			foreach($i->text[0]->text as $t) 
