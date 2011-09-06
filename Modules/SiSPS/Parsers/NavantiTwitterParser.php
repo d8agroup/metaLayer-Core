@@ -299,7 +299,7 @@ class NavantiTwitterParser implements IParser {
 
         //Fill the Content Item
         $item->text[] = new \Swiftriver\Core\ObjectModel\LanguageSpecificText(
-                $tweet->iso_language_code,
+                null,
                 $tweet->text,
                 array($tweet->text));
         $item->link = $tweet->source;
