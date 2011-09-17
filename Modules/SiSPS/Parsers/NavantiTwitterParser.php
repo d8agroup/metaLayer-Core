@@ -302,7 +302,7 @@ class NavantiTwitterParser implements IParser {
                 null,
                 $tweet->text,
                 array($tweet->text));
-        $item->link = $tweet->source;
+        $item->link = "http://twitter.com/#!/" . $tweet->from_user . "/status/" . $tweet->id_str;;
         $item->date = strtotime($tweet->created_at);
 
         if($tweet->geo != null && $tweet->geo->type == "Point" && \is_array($tweet->geo->coordinates))
