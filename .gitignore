@@ -1,9 +1,7 @@
-/Cache/*
-*.bat
 .buildpath
 .project
 .settings
 *_*.xml
 .pydevproject
 fabfile*
-_Tests*
+*.pyc
