@@ -18,7 +18,7 @@ SERVICE_ENDPOINTS = {
     'nlp':'http://50.57.38.102:5002/api/tag',
     'ocr':'http://50.57.38.134/services/1/ocr',
     'yahooplcemaker':'http://wherein.yahooapis.com/v1/document',
-    'imaging':'http://50.57.101.111:5000/processimage'
+    'imaging':'http://50.57.101.111/processimage'
 }
 
 #API KEYS
