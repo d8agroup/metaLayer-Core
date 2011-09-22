@@ -39,10 +39,7 @@ def ocr_adapter(image, image_id):
     request = urllib2.Request(url, datagen, headers)
 
     response = json.loads(urllib2.urlopen(request).read())
-    
-    if response['status'] == 'success':
-        return response['text'].encode('utf-8')
-    
+      
     return response
 
 def yahooplacemaker_adapter(text):
