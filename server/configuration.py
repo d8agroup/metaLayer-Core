@@ -17,7 +17,8 @@ ERROR_DATALAYER_LOCATIONSERVICE = { 'status':'failed', 'code':113, 'error':'Ther
 SERVICE_ENDPOINTS = {
     'nlp':'http://50.57.38.102:5002/api/tag',
     'ocr':'http://50.57.38.134/services/1/ocr',
-    'yahooplcemaker':'http://wherein.yahooapis.com/v1/document'
+    'yahooplcemaker':'http://wherein.yahooapis.com/v1/document',
+    'imaging':'http://localhost:5001/processimage'
 }
 
 #API KEYS

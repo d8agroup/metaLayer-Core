@@ -1,6 +1,6 @@
 from application import logger
 from configuration import *
-from adapters import nlp_adapter, ocr_adapter, yahooplacemaker_adapter
+from adapters import nlp_adapter, ocr_adapter, yahooplacemaker_adapter, imaging_adapter
 
 def datalayer_1(request):
     
@@ -19,11 +19,7 @@ def datalayer_1(request):
         'version':1
     }
     
-    text, tags, locations = run_text_processes(text)
-    
-    return_data['text'] = text
-    return_data['tags'] = tags
-    return_data['locations'] = locations
+    return_data['datalayer'] = run_text_processes(text)
     
     logger.info('datalayer_1 - METHOD ENDED')
     
@@ -46,15 +42,14 @@ def imglayer_1(request):
     
     if ocr_response['status'] == 'success':
         text = ocr_response['text']
-        text, tags, locations = run_text_processes(text)
+        test_response = run_text_processes(text)
     else:
-        text = ''
-        tags = locations = []
-        
-    return_data['text'] = text
-    return_data['tags'] = tags
-    return_data['locations'] = locations
+        test_response = {}
 
+    return_data['datalayer'] = test_response
+        
+    return_data['imglayer'] = imaging_adapter(image)
+    
     logger.info('imglayer_1 - METHOD ENDED')
     
     return return_data
@@ -78,4 +73,4 @@ def run_text_processes(text):
         if not MASK_ERRORS:
             raise e 
         
-    return text, tags, locations
+    return {'text':text, 'tags':tags, 'locations':locations }
