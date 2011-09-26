@@ -1,6 +1,7 @@
 from application import logger
 from configuration import *
 from adapters import nlp_adapter, ocr_adapter, yahooplacemaker_adapter, imaging_adapter
+from adapters import objectdetectionface_adapter
 
 def datalayer_1(request):
     
@@ -45,6 +46,13 @@ def imglayer_1(request):
         test_response = run_text_processes(text)
     else:
         test_response = {}
+        
+    objectdetectionface_response = objectdetectionface_adapter(image)
+    
+    if objectdetectionface_response['status'] == 'success':
+        return_data['objectdetection'] = { 'faces':objectdetectionface_response['faces'] }
+    else:
+        return_data['objectdetection'] = { 'faces':{ } }
 
     return_data['datalayer'] = test_response
         

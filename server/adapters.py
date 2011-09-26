@@ -58,7 +58,23 @@ def imaging_adapter(image):
     response = json.loads(urllib2.urlopen(request).read())
       
     return response
+
+def objectdetectionface_adapter(image):
+    url = SERVICE_ENDPOINTS['objectdetection-face']
     
+    register_openers()
+
+    items = []
+    
+    items.append(MultipartParam(name='image', filename='image.tiff', fileobj=image))
+
+    datagen, headers = multipart_encode(items)
+
+    request = urllib2.Request(url, datagen, headers)
+
+    response = json.loads(urllib2.urlopen(request).read())
+      
+    return response    
 
 def yahooplacemaker_adapter(text):
     url = SERVICE_ENDPOINTS['yahooplcemaker']
