@@ -35,7 +35,12 @@ def sentiment_adapter(text):
     response = json.loads(urllib2.urlopen(request).read())
     
     if response['status'] == 'success':
-        return response['sentiment']
+        sentiment = response['sentiment']
+        if sentiment > 5.0:
+            return 5.0
+        if sentiment < -5.0:
+            return -5.0
+        return sentiment
     
     return 0
     
