@@ -22,6 +22,22 @@ def nlp_adapter(text):
     response = json.loads(urllib2.urlopen(request).read())
     
     return response
+
+def sentiment_adapter(text):
+    url = SERVICE_ENDPOINTS['sentiment']
+    
+    data = { 'text':text }
+    
+    data = urllib.urlencode(data)
+    
+    request = urllib2.Request(url, data=data)
+    
+    response = json.loads(urllib2.urlopen(request).read())
+    
+    if response['status'] == 'success':
+        return response['sentiment']
+    
+    return 0
     
 def ocr_adapter(image, image_id):
     url = SERVICE_ENDPOINTS['ocr']

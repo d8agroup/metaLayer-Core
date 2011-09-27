@@ -1,7 +1,7 @@
 from application import logger
 from configuration import *
 from adapters import nlp_adapter, ocr_adapter, yahooplacemaker_adapter, imaging_adapter
-from adapters import objectdetectionface_adapter
+from adapters import objectdetectionface_adapter, sentiment_adapter
 
 def datalayer_1(request):
     
@@ -81,4 +81,14 @@ def run_text_processes(text):
         if not MASK_ERRORS:
             raise e 
         
-    return {'text':text, 'tags':tags, 'locations':locations }
+    sentiment = 0;
+
+    try:
+        sentiment = sentiment_adapter(text)
+    except Exception, e:
+        logger.error('datalayer_1 - ERROR the call the sentiment service failed: %s' % e)
+        if not MASK_ERRORS:
+            raise e 
+    
+        
+    return {'text':text, 'tags':tags, 'locations':locations, 'sentiment':sentiment }

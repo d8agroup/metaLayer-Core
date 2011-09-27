@@ -1,3 +1,4 @@
+import socket
 
 #ERROR HANDELING
 MASK_ERRORS = True
@@ -19,10 +20,14 @@ SERVICE_ENDPOINTS = {
     'ocr':'http://50.57.38.134/services/1/ocr',
     'yahooplcemaker':'http://wherein.yahooapis.com/v1/document',
     'imaging':'http://50.57.101.111/processimage',
-    'objectdetection-face':'http://50.57.38.60/detectfaces/1'
+    'objectdetection-face':'http://50.57.38.60/detectfaces/1',
+    'sentiment':'http://50.57.101.174/getsentiment'
 }
 
 #API KEYS
 APIKEYS = {
     'yahooplacemaker':'H6qFYGLV34Ebv5h6qUSowFuRj9NQnWBO2BzjdFOrjMCor3oiIE92Zj79_46lByT0h1P9daysoOuGLZT8'
 }
+
+if socket.gethostname() == 'matt-griffiths':
+    MASK_ERRORS = False
