@@ -117,23 +117,26 @@ class NavantiSolrEventHandler implements \Swiftriver\Core\EventDistribution\IEve
         			$c['language'] = $i->text[0]->languageCode;
         			$c['title'] = $i->text[0]->title;
         			$c['text'] = "";
+        			foreach($i->text[0]->text as $t) 
+        				$c['text'] .= $t . " ";
         			
         			$postData = array
 					(
-						"key" => $c['text']
+						"text" => $c['text']
 					);
 					
 					$service = new \Swiftriver\Core\Modules\SiSW\ServiceWrapper('http://50.57.105.108/getsentiment');
 					
 					$json = $service->MakePOSTRequest($postData, 10000);
 					
+					
 					$object = json_decode($json);
 					
+        			$logger->log("Swiftriver::EventHandlers::NavantiSolrEventHandler::HandleEvent SENTIMENT: " . $object->status . " " . $object->sentiment, \PEAR_LOG_DEBUG);
+					
         			if ($object->status == "success")
-        				$c['sentiment'] == $object->sentiment;
+        				$c['sentiment'] = $object->sentiment;
         			
-        			foreach($i->text[0]->text as $t) 
-        				$c['text'] .= $t . " ";
         			$c['link'] = $i->link;
         			$c['date'] = gmdate('Y-m-d\TH:i:s\Z', $i->date);
 
