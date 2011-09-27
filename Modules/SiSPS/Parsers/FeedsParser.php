@@ -200,7 +200,7 @@ class FeedsParser implements IParser
             $logger->log("Core::Modules::SiSPS::Parsers::FeedsParser::GetSimplePieContentEntries [Adding feed item]", \PEAR_LOG_DEBUG);
 
             //Get source data
-            $source_name = $feedItem->get_author()->name;
+            $source_name = $feedUrl;
             $source_name = ($source_name == null || $source_name == "") ? $feedUrl : $source_name . " @ " . $feedUrl;
             $source = \Swiftriver\Core\ObjectModel\ObjectFactories\SourceFactory::CreateSourceFromIdentifier($source_name, $channel->trusted);
             $source->name = $source_name;
