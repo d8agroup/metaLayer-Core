@@ -17,7 +17,8 @@ def datalayer_1(request):
     
     return_data = {
         'service':'datalayer',
-        'version':1
+        'version':1,
+        'status':'success'
     }
     
     return_data['datalayer'] = run_text_processes(text)
@@ -36,7 +37,8 @@ def imglayer_1(request):
     
     return_data = {
         'service':'imglayer',
-        'version':1
+        'version':1,
+        'status':'success
     }
     
     ocr_response = ocr_adapter(image, image_id)
