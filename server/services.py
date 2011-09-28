@@ -38,7 +38,7 @@ def imglayer_1(request):
     return_data = {
         'service':'imglayer',
         'version':1,
-        'status':'success
+        'status':'success'
     }
     
     ocr_response = ocr_adapter(image, image_id)
