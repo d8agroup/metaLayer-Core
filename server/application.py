@@ -19,10 +19,12 @@ import services
 def run_service(version, service_name):
     
     logger.info("run_service - METHOD STARTED with parameters: version=%i and service_name=%s" % (version, service_name))
-    
+
+    """    
     if 'api_key' not in request.form:
         logger.error("run_server - ERROR post variable api_key not supplied")
         return jsonify(ERROR_RESPONSE_NOAPI)
+    """
     
     service_and_version = "%s_%i" % (service_name.lower(), version)
     
