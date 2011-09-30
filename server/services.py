@@ -204,11 +204,14 @@ def run_img_imaging(image):
     return return_data
 
 def run_img_face(image):
-    objectdetectionface_response = objectdetectionface_adapter(image)
-    
-    if objectdetectionface_response['status'] == 'success':
-        return { 'faces':objectdetectionface_response['faces'] }
-    else:
+    try:
+        objectdetectionface_response = objectdetectionface_adapter(image)
+        
+        if objectdetectionface_response['status'] == 'success':
+            return { 'faces':objectdetectionface_response['faces'] }
+        else:
+            return { 'faces':{ } }
+    except:
         return { 'faces':{ } }
 
 def run_img_ocr(image):
