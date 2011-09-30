@@ -71,7 +71,7 @@ def tagging_1(request):
     }
     
     return_data['datalayer'] = {
-        'tagging':run_text_tagging(text)
+        'tags':run_text_tagging(text)
     }
     
     logger.info('tagging_1 - METHOD ENDED')
