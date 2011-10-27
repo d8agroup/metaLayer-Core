@@ -210,9 +210,10 @@ def run_img_face(image):
         if objectdetectionface_response['status'] == 'success':
             return { 'faces':objectdetectionface_response['faces'] }
         else:
-            return { 'faces':{ } }
-    except:
-        return { 'faces':{ } }
+            return { 'faces':[] }
+    except Exception, e:
+        logger.error(e)
+        return { 'faces':[] }
 
 def run_img_ocr(image):
     image_id = "test" #TODO this needs to be DB identifier once there is a DB
