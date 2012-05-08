@@ -229,7 +229,12 @@ def run_img_ocr(image):
             'sentiment':run_text_sentiment(text)         
         }
     else:
-        return {}
+        return {
+            'text':'',
+            'tags':[],
+            'locations':[],
+            'sentiment':0
+        }
 
 def run_text_tagging(text):
     tags = []
